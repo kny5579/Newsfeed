@@ -1,4 +1,4 @@
-package com.example.newsfeed.entity;
+package com.example.newsfeed.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -20,7 +20,7 @@ public abstract class BaseEntity {
     private LocalDateTime create_at;
 
     @LastModifiedDate
-    @Column(name = "update_date")
+    @Column(name = "update_at")
     private LocalDateTime deleted_at;
 
 }
