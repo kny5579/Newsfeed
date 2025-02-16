@@ -1,7 +1,5 @@
-package com.example.newsfeed.entity;
+package com.example.newsfeed.entity.boardEntity;
 
-import com.example.newsfeed.common.entity.BaseEntity;
-import com.example.newsfeed.entity.boardEntity.Board;
 import com.example.newsfeed.entity.userEntity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,15 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "comment")
+@Table(name = "board_likes")
 @NoArgsConstructor
-public class Comment extends BaseEntity {
+public class BoardLikes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
