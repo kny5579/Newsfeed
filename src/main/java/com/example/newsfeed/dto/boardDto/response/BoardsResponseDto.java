@@ -11,6 +11,7 @@ public class BoardsResponseDto {
     private String name;
     private String user_image_url;
     private String board_image_url;
+    private String contents;
     private int likeCnt;
     private int commentCnt;
     private boolean like;

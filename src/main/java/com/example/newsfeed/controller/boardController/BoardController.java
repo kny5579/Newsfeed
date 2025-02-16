@@ -6,6 +6,7 @@ import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
 import com.example.newsfeed.service.boardService.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,8 @@ public class BoardController {
     }
 
     @GetMapping
-    public ResponseEntity<BoardsResponseDto> findAll(
+    public ResponseEntity<Page<BoardsResponseDto>> findAll(
+            @SessionAttribute(name = Const.LOGIN_USER) Long id,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "UPDATE_AT") OrderBy orderBy,
@@ -40,8 +42,8 @@ public class BoardController {
             @RequestParam(required = false) LocalDate updateAtEnd
             ){
 
-        boardService.findAll(page, size, orderBy, direction, updateAtStart, updateAtEnd);
+        Page<BoardsResponseDto> pages = boardService.findAll(id, page, size, orderBy, direction, updateAtStart, updateAtEnd);
 
-        return new ResponseEntity<>();
+        return new ResponseEntity<>(pages, HttpStatus.OK);
     }
 }
