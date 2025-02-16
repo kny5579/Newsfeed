@@ -1,5 +1,6 @@
-package com.example.newsfeed.entity;
+package com.example.newsfeed.entity.follower;
 
+import com.example.newsfeed.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Follow {
+public class Follower {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

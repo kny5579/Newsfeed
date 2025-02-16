@@ -1,4 +1,4 @@
-package com.example.newsfeed.controller;
+package com.example.newsfeed.controller.follower;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/follows")
 @RequiredArgsConstructor
-public class FollowController {
+public class FollowerController {
 
 
 }
