@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class FollowerResponseDto {
-    private String userName;
+public class FollowerResponseDto { //혹시 추가 필드 작성할 수 있어서 없애지 않음
     private String followerName;
 }

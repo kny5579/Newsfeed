@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Validated
 @RestController
 @RequestMapping("/follows")
@@ -18,9 +20,14 @@ public class FollowerController {
     private final FollowerService followerService;
 
     @PostMapping
-    public ResponseEntity<FollowerResponseDto> followUser(@SessionAttribute(name = Const.LOGIN_USER) Long userId,
+    public ResponseEntity<String> followUser(@SessionAttribute(name = Const.LOGIN_USER) Long userId,
                                                           @RequestParam Long followerId) {
         return new ResponseEntity<>(followerService.followUser(userId, followerId), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FollowerResponseDto>> getFollowers(@SessionAttribute(name = Const.LOGIN_USER) Long userId) {
+        return new ResponseEntity<>(followerService.getFollowers(userId), HttpStatus.OK);
     }
 
 }

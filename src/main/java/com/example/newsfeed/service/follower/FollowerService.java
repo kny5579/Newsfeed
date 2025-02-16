@@ -5,12 +5,13 @@ import com.example.newsfeed.entity.follower.Follower;
 import com.example.newsfeed.entity.user.User;
 import com.example.newsfeed.repository.follower.FollowerRepository;
 import com.example.newsfeed.repository.user.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.newsfeed.entity.follower.Follower.Status.PENDING;
@@ -24,7 +25,7 @@ public class FollowerService {
 
     //TODO: 예외처리 클래스 추가 이후 수정
     @Transactional
-    public FollowerResponseDto followUser(Long userId, Long followerId) {
+    public String followUser(Long userId, Long followerId) {
 
         if(userId.equals(followerId)) throw new RuntimeException("자기 자신은 친구 추가할 수 없습니다.");
 
@@ -43,7 +44,17 @@ public class FollowerService {
         Follower follow = new Follower(follower, user, PENDING);
         followerRepository.save(follow);
 
-        return new FollowerResponseDto(user.getName(),follower.getName());
+        return follow.getFollower().getName()+"님에게 친구 요청을 보냈습니다.";
+    }
+
+    @Transactional(readOnly = true)
+    public List<FollowerResponseDto> getFollowers(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("not found"));
+
+        return followerRepository.findByUserId(userId).stream()
+                .map(f -> new FollowerResponseDto(f.getFollower().getName()))
+                .toList();
     }
 
 }
