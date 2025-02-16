@@ -1,15 +1,14 @@
-package com.example.newsfeed.entity.follower;
+package com.example.newsfeed.entity.follow;
 
 import com.example.newsfeed.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class Follower {
+public class Follow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +29,7 @@ public class Follower {
         PENDING, ACCEPTED, REJECTED
     }
 
-    public Follower(User follower, User user, Status status) {
+    public Follow(User follower, User user, Status status) {
         this.follower= follower;
         this.user = user;
         this.status = status;

@@ -1,10 +1,10 @@
-package com.example.newsfeed.dto.follower.requestDto;
+package com.example.newsfeed.dto.follow.requestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class FollowerRequestDto {
+public class FollowRequestDto {
 
 }
