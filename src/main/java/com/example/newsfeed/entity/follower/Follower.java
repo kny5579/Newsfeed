@@ -4,6 +4,7 @@ import com.example.newsfeed.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -27,5 +28,11 @@ public class Follower {
 
     public enum Status {
         PENDING, ACCEPTED, REJECTED
+    }
+
+    public Follower(User follower, User user, Status status) {
+        this.follower= follower;
+        this.user = user;
+        this.status = status;
     }
 }
