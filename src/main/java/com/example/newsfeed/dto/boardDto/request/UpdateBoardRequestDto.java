@@ -1,4 +1,4 @@
-package com.example.newsfeed.dto.boardDto;
+package com.example.newsfeed.dto.boardDto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.example.newsfeed.entity.userEntity;
 
-import com.example.newsfeed.common.BaseEntity;
+import com.example.newsfeed.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,4 +23,12 @@ public class User extends BaseEntity {
     private String password;
 
     private boolean deleted = false;
+
+    private User(Long id){
+        this.id = id;
+    }
+
+    public static User fromUserId(Long id) {
+        return new User(id);
+    }
 }
