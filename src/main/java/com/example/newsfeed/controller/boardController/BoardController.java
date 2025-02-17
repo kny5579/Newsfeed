@@ -1,6 +1,5 @@
 package com.example.newsfeed.controller.boardController;
 
-import com.example.newsfeed.common.consts.Const;
 import com.example.newsfeed.common.consts.OrderBy;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
@@ -23,8 +22,12 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@ModelAttribute BoardSaveRequestDto dto, @SessionAttribute(name = Const.LOGIN_USER) Long id){
+    public ResponseEntity<Void> save(
+            //@SessionAttribute(name = Const.LOGIN_USER) Long id,
+            @ModelAttribute BoardSaveRequestDto dto
+    ){
 
+        Long id = 1L;
         boardService.save(dto, id);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -32,22 +35,27 @@ public class BoardController {
 
     @GetMapping
     public ResponseEntity<Page<BoardsResponseDto>> findAll(
-            @SessionAttribute(name = Const.LOGIN_USER) Long id,
+            //@SessionAttribute(name = Const.LOGIN_USER) Long id,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "UPDATE_AT") OrderBy orderBy,
+            @RequestParam(defaultValue = "UPDATED_AT") OrderBy orderBy,
             @RequestParam(defaultValue = "DESC") Sort.Direction direction,
             @RequestParam(required = false) LocalDate updateAtStart,
             @RequestParam(required = false) LocalDate updateAtEnd
             ){
 
+        Long id = 1L;
         Page<BoardsResponseDto> pages = boardService.findAll(id, page, size, orderBy, direction, updateAtStart, updateAtEnd);
 
         return new ResponseEntity<>(pages, HttpStatus.OK);
     }
 
-    public ResponseEntity<BoardResponseDto> find(@PathVariable Long id, @SessionAttribute(name = Const.LOGIN_USER) Long userId){
-
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardResponseDto> find(
+            //@SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @PathVariable Long id
+    ){
+        Long userId = 1L;
         return new ResponseEntity<>(boardService.find(id, userId), HttpStatus.OK);
     }
 }

@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CommentLikesDto {
     private final Long commentId;
-    private final Long userId;
     private final Long count;
+    private final boolean like;
 }

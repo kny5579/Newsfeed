@@ -17,5 +17,5 @@ public class BoardResponseDto {
     private int likeCnt;
     private Page<CommentResponseDto> comment;
     private boolean like;
-    private LocalDate update_at;
+    private LocalDate updatedAt;
 }

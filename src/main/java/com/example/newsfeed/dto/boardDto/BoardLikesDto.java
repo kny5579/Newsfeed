@@ -8,6 +8,6 @@ import lombok.Getter;
 public class BoardLikesDto {
 
     private final Long boardId;
-    private final Long userId;
     private final Long count;
+    private final boolean like;
 }

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table(name = "user")
@@ -16,13 +18,15 @@ public class User extends BaseEntity {
 
     private String name;
 
+    @Column(name = "image_url")
     private String img_url;
 
     private String email;
 
     private String password;
 
-    private boolean deleted = false;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt = null;
 
     private User(Long id){
         this.id = id;

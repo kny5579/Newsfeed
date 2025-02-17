@@ -6,9 +6,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
-@Table(name = "user")
+@Table(name = "board")
 @NoArgsConstructor
 public class Board extends BaseEntity {
 
@@ -16,7 +18,7 @@ public class Board extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String cotents;
+    private String contents;
 
     private String image_url;
 
@@ -25,7 +27,7 @@ public class Board extends BaseEntity {
     private User user;
 
     public Board(String contents, String image_url, User user){
-        this.cotents = contents;
+        this.contents = contents;
         this.image_url = image_url;
         this.user = user;
     }

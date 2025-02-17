@@ -49,7 +49,7 @@ public class BoardServiceImpl implements BoardService{
         Board savedBoard = boardRepository.save(board);
 
         // 저장 내용 검증
-        if(savedBoard.getUser() == null || savedBoard.getUser().getId().equals(id)){
+        if(savedBoard.getUser() == null || !savedBoard.getUser().getId().equals(id)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Save failed");
         }
     }
@@ -61,7 +61,8 @@ public class BoardServiceImpl implements BoardService{
             LocalDate updateAtStart, LocalDate updateAtEnd) {
 
         // 페이징 조건
-        Pageable pageable = PageRequest.of(page-1, size, Sort.by(direction, orderBy.name().toLowerCase()));
+        System.out.println(orderBy.getFieldName());
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by(direction, orderBy.getFieldName()));
         Page<Board> pages;
 
         // 날짜 조건 입력에 따라 페이징
@@ -84,23 +85,23 @@ public class BoardServiceImpl implements BoardService{
                 .collect(Collectors.toMap(CommentCountDto::getBoardId, CommentCountDto::getCount));
 
         // 피드 좋아요 수 조회
-        List<BoardLikesDto> boardLikesCount = boardLikesRepository.countByBoardIds(boardIds);
+        List<BoardLikesDto> boardLikesCount = boardLikesRepository.countByBoardIds(id, boardIds);
         Map<Long, Long> boardLikesCountMap = boardLikesCount.stream()
                 .collect(Collectors.toMap(BoardLikesDto::getBoardId, BoardLikesDto::getCount));
 
         // 피드 좋아요 여부  // 본인 피드에 좋아요 가능한지 알아볼 것
         Map<Long, Boolean> boardLikescheckMap = boardLikesCount.stream()
-                .collect(Collectors.toMap(BoardLikesDto::getBoardId, dto -> dto.getUserId().equals(id) && dto.getCount() > 0));
+                .collect(Collectors.toMap(BoardLikesDto::getBoardId, BoardLikesDto::isLike));
 
         return pages.map(board -> new BoardsResponseDto(
                 board.getUser().getName(),
                 board.getUser().getImg_url(),
                 board.getImage_url(),
-                board.getCotents(),
+                board.getContents(),
                 boardLikesCountMap.getOrDefault(board.getId(), 0L).intValue(),
                 commentCountMap.getOrDefault(board.getId(), 0L).intValue(),
-                boardLikescheckMap.get(board.getId()),
-                board.getUpdate_at().toLocalDate()
+                boardLikescheckMap.getOrDefault(board.getId(), false),
+                board.getUpdatedAt().toLocalDate()
         ));
     }
 
@@ -122,20 +123,20 @@ public class BoardServiceImpl implements BoardService{
 
         // 해당 피드 댓글 조회
         // 댓글 페이징 조건
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "update_at"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "updatedAt"));
         Page<Comment> pages = commentRepository.findAll(pageable);
 
         // 댓글 아이디 추출
         List<Long> commentIds = pages.stream().map(Comment::getId).toList();
 
         // 댓글 좋아요 수 조회
-        List<CommentLikesDto> commentLikes = commentLikesRepository.countByCommentIds(commentIds);
+        List<CommentLikesDto> commentLikes = commentLikesRepository.countByCommentIds(id, commentIds);
         Map<Long, Long> commentLikesCountMap = commentLikes.stream()
                 .collect(Collectors.toMap(CommentLikesDto::getCommentId, CommentLikesDto::getCount));
 
         // 댓글 좋아요 여부
         Map<Long, Boolean> commentLikescheckMap = commentLikes.stream()
-                .collect(Collectors.toMap(CommentLikesDto::getCommentId, dto -> dto.getUserId().equals(id) && dto.getCount() > 0));
+                .collect(Collectors.toMap(CommentLikesDto::getCommentId, CommentLikesDto::isLike));
 
         // 댓글 페이징
         Page<CommentResponseDto> commentPages = pages.map(comment -> new CommentResponseDto(
@@ -143,19 +144,19 @@ public class BoardServiceImpl implements BoardService{
                 comment.getUser().getName(),
                 comment.getContents(),
                 commentLikesCountMap.getOrDefault(comment.getId(), 0L).intValue(),
-                commentLikescheckMap.get(comment.getId()),
-                comment.getUpdate_at().toLocalDate()
+                commentLikescheckMap.getOrDefault(comment.getId(), false),
+                comment.getUpdatedAt().toLocalDate()
         ));
 
         return new BoardResponseDto(
                 board.getUser().getName(),
                 board.getUser().getImg_url(),
                 board.getImage_url(),
-                board.getCotents(),
+                board.getContents(),
                 boardLikeCnt.intValue(),
                 commentPages,
                 isBoardLike,
-                board.getUpdate_at().toLocalDate()
+                board.getUpdatedAt().toLocalDate()
         );
     }
 }
