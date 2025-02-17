@@ -1,6 +1,6 @@
 package com.example.newsfeed.repository.user;
 
-import com.example.newsfeed.entity.user.User;
+import com.example.newsfeed.entity.userEntity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

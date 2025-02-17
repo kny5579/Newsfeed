@@ -2,7 +2,7 @@ package com.example.newsfeed.entity.comment;
 
 import com.example.newsfeed.common.entity.BaseEntity;
 import com.example.newsfeed.entity.board.Board;
-import com.example.newsfeed.entity.user.User;
+import com.example.newsfeed.entity.userEntity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
