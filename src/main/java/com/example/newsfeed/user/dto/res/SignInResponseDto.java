@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class SignInResponseDto {
-    private Long id;
-    private String email;
-    private String token;
+    private final Long id;
+    private final String email;
+    private final String token;
 
     public SignInResponseDto(Long id, String email, String token) {
         this.id = id;
