@@ -4,7 +4,7 @@ import com.example.newsfeed.common.config.PasswordEncoder;
 import com.example.newsfeed.common.exception.InvalidCredentialException;
 import com.example.newsfeed.common.exception.UserNotFoundException;
 import com.example.newsfeed.common.utill.JwtUtil;
-import com.example.newsfeed.entity.User;
+import com.example.newsfeed.entity.userEntity.User;
 import com.example.newsfeed.user.dto.req.DeleteRequestDto;
 import com.example.newsfeed.user.dto.req.SignInRequestDto;
 import com.example.newsfeed.user.dto.req.SignUpRequestDto;

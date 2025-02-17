@@ -1,6 +1,6 @@
 package com.example.newsfeed.user.repository;
 
-import com.example.newsfeed.entity.User;
+import com.example.newsfeed.entity.userEntity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
