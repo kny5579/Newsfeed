@@ -89,7 +89,7 @@ public class BoardServiceImpl implements BoardService {
 
         return pages.map(board -> new BoardsResponseDto(
                 board.getUser().getName(),
-                board.getUser().getImg_url(),
+                board.getUser().getImgUrl(),
                 board.getImage_url(),
                 board.getContents(),
                 board.getLikeCnt().intValue(),
@@ -130,7 +130,7 @@ public class BoardServiceImpl implements BoardService {
 
         // 댓글 페이징
         Page<CommentResponseDto> commentPages = pages.map(comment -> new CommentResponseDto(
-                comment.getUser().getImg_url(),
+                comment.getUser().getImgUrl(),
                 comment.getUser().getName(),
                 comment.getContents(),
                 commentLikesCountMap.getOrDefault(comment.getId(), 0L).intValue(),
@@ -140,7 +140,7 @@ public class BoardServiceImpl implements BoardService {
 
         return new BoardResponseDto(
                 board.getUser().getName(),
-                board.getUser().getImg_url(),
+                board.getUser().getImgUrl(),
                 board.getImage_url(),
                 board.getContents(),
                 board.getLikeCnt().intValue(),
@@ -222,7 +222,7 @@ public class BoardServiceImpl implements BoardService {
 
         return pages.map(board -> new UserBoardResponseDto(
                 board.getUser().getName(),
-                board.getUser().getImg_url(),
+                board.getUser().getImgUrl(),
                 totalFeeds.intValue(),
                 follower,
                 follow,
