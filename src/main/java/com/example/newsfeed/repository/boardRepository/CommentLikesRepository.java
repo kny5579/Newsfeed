@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CommentLikesRepository extends JpaRepository <CommentLikes, Long> {
@@ -18,4 +19,6 @@ public interface CommentLikesRepository extends JpaRepository <CommentLikes, Lon
             "where c.comment.id in :commentIds " +
             "group by c.comment.id")
     List<CommentLikesDto> countByCommentIds(Long userId, List<Long> commentIds);
+
+    Optional<CommentLikes> findByCommentIdAndUserId(Long commentId, Long userId);
 }

@@ -230,7 +230,9 @@ public class BoardServiceImpl implements BoardService {
         ));
     }
 
+
     @Override
+    @Transactional
     public void likes(Long boardId, Long userId) {
 
         // 해당 피드인지 조회
@@ -251,10 +253,5 @@ public class BoardServiceImpl implements BoardService {
             boardLikesRepository.delete(boardLike.get());
             board.cansle();
         }
-
-
-
-
-
     }
 }
