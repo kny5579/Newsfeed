@@ -1,7 +1,7 @@
 package com.example.newsfeed.user.controller;
 
-import com.example.newsfeed.user.dto.req.SignUpRequestDto;
-import com.example.newsfeed.user.dto.res.UserResponseDto;
+import com.example.newsfeed.user.dto.req.SignInRequestDto;
+import com.example.newsfeed.user.dto.res.SignInResponseDto;
 import com.example.newsfeed.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
-public class UserController {
+public class SignInController {
     private final UserService userService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody SignUpRequestDto dto) {
-        return ResponseEntity.ok(userService.save(dto));
+    @PostMapping("/signin")
+    public ResponseEntity<SignInResponseDto> signIn(@RequestBody SignInRequestDto dto) {
+        SignInResponseDto response = userService.handleLogin(dto);
+        return ResponseEntity.ok(response);
     }
 }
