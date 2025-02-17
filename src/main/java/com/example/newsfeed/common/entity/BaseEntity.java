@@ -17,10 +17,9 @@ public abstract class BaseEntity {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime create_at;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "update_at")
-    private LocalDateTime deleted_at;
-
+    private LocalDateTime updatedAt;
 }
