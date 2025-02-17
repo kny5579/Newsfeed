@@ -5,6 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class FollowResponseDto { //혹시 추가 필드 작성할 수 있어서 없애지 않음
+//TODO: follower 이미지 추가
+public class FollowResponseDto {
+    private Long followerId;
     private String followerName;
 }

@@ -47,7 +47,7 @@ public class FollowService {
         User user = getUserById(userId);
 
         return followRepository.findByUserId(userId).stream()
-                .map(f -> new FollowResponseDto(f.getFollower().getName()))
+                .map(f -> new FollowResponseDto(f.getFollower().getId(),f.getFollower().getName()))
                 .toList();
     }
 
