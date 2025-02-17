@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.newsfeed.entity.follow.Follow.Status.ACCEPTED;
+
 @Validated
 @RestController
 @RequestMapping("/follows")
@@ -30,16 +32,18 @@ public class FollowController {
         return new ResponseEntity<>(followService.getFollowers(userId), HttpStatus.OK);
     }
 
-    @PatchMapping("/{followerId}")
+    @PatchMapping("/{followerId}/accept")
     public ResponseEntity<String> acceptFollower(@SessionAttribute(name = Const.LOGIN_USER) Long userId,
                                                  @PathVariable Long followerId) {
-        return new ResponseEntity<>(followService.acceptFollower(userId,followerId), HttpStatus.OK);
+        followService.acceptFollower(userId,followerId);
+        return new ResponseEntity<>("요청이 수락되었습니다.", HttpStatus.OK);
     }
 
-    @PatchMapping("/{followerId}")
+    @PatchMapping("/{followerId}/reject")
     public ResponseEntity<String> rejectFollower(@SessionAttribute(name = Const.LOGIN_USER) Long userId,
                                                             @PathVariable Long followerId) {
-        return new ResponseEntity<>(followService.rejectFollower(userId,followerId), HttpStatus.OK);
+        followService.rejectFollower(userId,followerId);
+        return new ResponseEntity<>("요청이 거절되었습니다.", HttpStatus.OK);
     }
 
     @DeleteMapping("/{followerId}")
