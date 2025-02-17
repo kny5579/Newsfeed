@@ -1,14 +1,12 @@
-package com.example.newsfeed.repository.boardRepository;
+package com.example.newsfeed.repository.board;
 
 import com.example.newsfeed.dto.boardDto.CommentCountDto;
-import com.example.newsfeed.entity.boardEntity.Comment;
-import com.example.newsfeed.entity.boardEntity.CommentLikes;
+import com.example.newsfeed.entity.board.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {

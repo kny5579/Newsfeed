@@ -1,6 +1,6 @@
 package com.example.newsfeed.controller.boardController;
 
-import com.example.newsfeed.service.boardService.CommentService;
+import com.example.newsfeed.service.board.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.example.newsfeed.service.boardService;
+package com.example.newsfeed.service.board;
 
 
 public interface CommentService {

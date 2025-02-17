@@ -1,4 +1,4 @@
-package com.example.newsfeed.service.boardService;
+package com.example.newsfeed.service.board;
 
 import com.example.newsfeed.common.consts.OrderBy;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;

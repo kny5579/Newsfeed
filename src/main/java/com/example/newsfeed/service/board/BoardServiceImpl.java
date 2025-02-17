@@ -1,4 +1,4 @@
-package com.example.newsfeed.service.boardService;
+package com.example.newsfeed.service.board;
 
 import com.example.newsfeed.common.consts.OrderBy;
 import com.example.newsfeed.dto.boardDto.CommentLikesDto;
@@ -10,14 +10,14 @@ import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
 import com.example.newsfeed.dto.boardDto.response.UserBoardFeedResponseDto;
 import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
-import com.example.newsfeed.entity.boardEntity.BoardLikes;
-import com.example.newsfeed.entity.boardEntity.Comment;
-import com.example.newsfeed.entity.boardEntity.Board;
+import com.example.newsfeed.entity.board.BoardLikes;
+import com.example.newsfeed.entity.board.Comment;
+import com.example.newsfeed.entity.board.Board;
 import com.example.newsfeed.entity.userEntity.User;
-import com.example.newsfeed.repository.boardRepository.BoardLikesRepository;
-import com.example.newsfeed.repository.boardRepository.CommentLikesRepository;
-import com.example.newsfeed.repository.boardRepository.CommentRepository;
-import com.example.newsfeed.repository.boardRepository.BoardRepository;
+import com.example.newsfeed.repository.board.BoardLikesRepository;
+import com.example.newsfeed.repository.board.CommentLikesRepository;
+import com.example.newsfeed.repository.board.CommentRepository;
+import com.example.newsfeed.repository.board.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

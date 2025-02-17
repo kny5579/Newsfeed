@@ -1,9 +1,9 @@
-package com.example.newsfeed.service.boardService;
+package com.example.newsfeed.service.board;
 
-import com.example.newsfeed.entity.boardEntity.Comment;
-import com.example.newsfeed.entity.boardEntity.CommentLikes;
-import com.example.newsfeed.repository.boardRepository.CommentLikesRepository;
-import com.example.newsfeed.repository.boardRepository.CommentRepository;
+import com.example.newsfeed.entity.board.Comment;
+import com.example.newsfeed.entity.board.CommentLikes;
+import com.example.newsfeed.repository.board.CommentLikesRepository;
+import com.example.newsfeed.repository.board.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
