@@ -2,7 +2,6 @@ package com.example.newsfeed.service.boardService;
 
 import com.example.newsfeed.common.consts.OrderBy;
 import com.example.newsfeed.dto.boardDto.CommentLikesDto;
-import com.example.newsfeed.dto.boardDto.BoardLikesDto;
 import com.example.newsfeed.dto.boardDto.CommentCountDto;
 import com.example.newsfeed.dto.boardDto.CommentResponseDto;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
@@ -14,7 +13,6 @@ import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
 import com.example.newsfeed.entity.boardEntity.Comment;
 import com.example.newsfeed.entity.boardEntity.Board;
 import com.example.newsfeed.entity.userEntity.User;
-import com.example.newsfeed.repository.boardRepository.BoardLikesRepository;
 import com.example.newsfeed.repository.boardRepository.CommentLikesRepository;
 import com.example.newsfeed.repository.boardRepository.CommentRepository;
 import com.example.newsfeed.repository.boardRepository.BoardRepository;
@@ -39,7 +37,6 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
-    private final BoardLikesRepository boardLikesRepository;
     private final CommentLikesRepository commentLikesRepository;
 
     @Override
@@ -86,23 +83,14 @@ public class BoardServiceImpl implements BoardService {
         Map<Long, Long> commentCountMap = commentCount.stream()
                 .collect(Collectors.toMap(CommentCountDto::getBoardId, CommentCountDto::getCount));
 
-        // 피드 좋아요 수 조회
-        List<BoardLikesDto> boardLikesCount = boardLikesRepository.countByBoardIds(id, boardIds);
-        Map<Long, Long> boardLikesCountMap = boardLikesCount.stream()
-                .collect(Collectors.toMap(BoardLikesDto::getBoardId, BoardLikesDto::getCount));
-
-        // 피드 좋아요 여부  // 본인 피드에 좋아요 가능한지 알아볼 것
-        Map<Long, Boolean> boardLikescheckMap = boardLikesCount.stream()
-                .collect(Collectors.toMap(BoardLikesDto::getBoardId, BoardLikesDto::isLike));
-
         return pages.map(board -> new BoardsResponseDto(
                 board.getUser().getName(),
                 board.getUser().getImg_url(),
                 board.getImage_url(),
                 board.getContents(),
-                boardLikesCountMap.getOrDefault(board.getId(), 0L).intValue(),
+                board.getLikeCnt().intValue(),
                 commentCountMap.getOrDefault(board.getId(), 0L).intValue(),
-                boardLikescheckMap.getOrDefault(board.getId(), false),
+                board.getUser().getId().equals(board.getId()) || board.getLikeCnt() <= 0,
                 board.getUpdatedAt().toLocalDate()
         ));
     }
@@ -116,16 +104,12 @@ public class BoardServiceImpl implements BoardService {
 
         // 내일? 오늘? 유저 비공개 확인하는거 테이블이던 뭐던 추가해야 한다고 말하기
 
-        // 피드 좋아요 수 조회
-        Long boardLikeCnt = boardLikesRepository.countByBoardId(id);
-
         // 해당 피드 좋아요 여부
-        Long boardLike = boardLikesRepository.countByBoardIdAndUserId(id, userId);
-        boolean isBoardLike = boardLike != null;
+        boolean isBoardLike = board.getUser().getId().equals(board.getId()) || board.getLikeCnt() <= 0;
 
         // 해당 피드 댓글 조회
         // 댓글 페이징 조건
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, OrderBy.UPDATED_AT.getFieldName()));
         Page<Comment> pages = commentRepository.findAll(pageable);
 
         // 댓글 아이디 추출
@@ -155,7 +139,7 @@ public class BoardServiceImpl implements BoardService {
                 board.getUser().getImg_url(),
                 board.getImage_url(),
                 board.getContents(),
-                boardLikeCnt.intValue(),
+                board.getLikeCnt().intValue(),
                 commentPages,
                 isBoardLike,
                 board.getUpdatedAt().toLocalDate()
@@ -199,12 +183,12 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Page<UserBoardResponseDto> findUserId(Long id, Long userId) {
 
-        if (id.equals(userId)) {
+        if (!id.equals(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your id");
         }
 
         // 페이징 조건
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "updateAt"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, OrderBy.UPDATED_AT.getFieldName()));
         Page<Board> pages = boardRepository.findAllByUserId(id, pageable);
 
         // 피드 아이디 추출
@@ -214,11 +198,6 @@ public class BoardServiceImpl implements BoardService {
         List<CommentCountDto> commentCount = commentRepository.countByBoardIds(boardIds);
         Map<Long, Long> commentCountMap = commentCount.stream()
                 .collect(Collectors.toMap(CommentCountDto::getBoardId, CommentCountDto::getCount));
-
-        // 피드 좋아요 수 조회
-        List<BoardLikesDto> boardLikesCount = boardLikesRepository.countByBoardIds(id, boardIds);
-        Map<Long, Long> boardLikesCountMap = boardLikesCount.stream()
-                .collect(Collectors.toMap(BoardLikesDto::getBoardId, BoardLikesDto::getCount));
 
         // 피드 수 조회
         Long totalFeeds = pages.getTotalElements();
@@ -232,7 +211,7 @@ public class BoardServiceImpl implements BoardService {
         // 개인 페이지 피드
         Page<UserBoardFeedResponseDto> feeds = pages.map(board -> new UserBoardFeedResponseDto(
                 board.getImage_url(),
-                boardLikesCountMap.getOrDefault(board.getId(), 0L).intValue(),
+                board.getLikeCnt().intValue(),
                 commentCountMap.getOrDefault(board.getId(), 0L).intValue()
         ));
 

@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,6 +20,9 @@ public class Board extends BaseEntity {
     private String contents;
 
     private String image_url;
+
+    @Column(name = "likes_cnt")
+    private Long likeCnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

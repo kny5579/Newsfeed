@@ -17,6 +17,7 @@ CREATE TABLE board
     image_url VARCHAR(1000) NOT NULL,
     created_at DATETIME,
     updated_at DATETIME,
+    likes_cnt BIGINT,
     user_id BIGINT,
     foreign key (user_id) references user(id) ON DELETE CASCADE
 );
