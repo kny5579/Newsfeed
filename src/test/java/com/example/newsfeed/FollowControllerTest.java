@@ -61,7 +61,7 @@ public class FollowControllerTest {
     @Test
     void testGetFollowers() throws Exception {
         Long userId = 1L;
-        FollowResponseDto followResponseDto = new FollowResponseDto("user2");
+        FollowResponseDto followResponseDto = new FollowResponseDto(1L, "user2");
         when(followService.getFollowers(userId)).thenReturn(Collections.singletonList(followResponseDto));
 
         mockMvc.perform(get("/follows")
