@@ -38,4 +38,12 @@ public class Board extends BaseEntity {
         this.contents = contents;
         this.image_url = imageUrl;
     }
+
+    public void like() {
+        this.likeCnt++;
+    }
+
+    public void cansle() {
+        this.likeCnt--;
+    }
 }

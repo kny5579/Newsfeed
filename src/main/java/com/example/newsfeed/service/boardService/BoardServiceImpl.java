@@ -10,9 +10,11 @@ import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
 import com.example.newsfeed.dto.boardDto.response.UserBoardFeedResponseDto;
 import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
+import com.example.newsfeed.entity.boardEntity.BoardLikes;
 import com.example.newsfeed.entity.boardEntity.Comment;
 import com.example.newsfeed.entity.boardEntity.Board;
 import com.example.newsfeed.entity.userEntity.User;
+import com.example.newsfeed.repository.boardRepository.BoardLikesRepository;
 import com.example.newsfeed.repository.boardRepository.CommentLikesRepository;
 import com.example.newsfeed.repository.boardRepository.CommentRepository;
 import com.example.newsfeed.repository.boardRepository.BoardRepository;
@@ -29,6 +31,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +39,7 @@ import java.util.stream.Collectors;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardLikesRepository boardLikesRepository;
     private final CommentRepository commentRepository;
     private final CommentLikesRepository commentLikesRepository;
 
@@ -224,5 +228,33 @@ public class BoardServiceImpl implements BoardService {
                 follow,
                 feeds
         ));
+    }
+
+    @Override
+    public void likes(Long boardId, Long userId) {
+
+        // 해당 피드인지 조회
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+
+        // 사용자의 피드인지 검증
+        if (!board.getUser().getId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "It's your feed");
+        }
+
+        // 사용자가 해당 피드에 좋아요를 눌렀는지 조회하고 누르지 않았았으면 좋아요 처리
+        Optional<BoardLikes> boardLike = boardLikesRepository.findByBoardIdAndUserId(boardId, userId);
+
+        if(boardLike.isEmpty()){
+            boardLikesRepository.save((new BoardLikes(board, board.getUser())));
+        }else{
+            boardLikesRepository.delete(boardLike.get());
+            board.cansle();
+        }
+
+
+
+
+
     }
 }

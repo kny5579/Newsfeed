@@ -92,4 +92,14 @@ public class BoardController {
 
         return new ResponseEntity<>(boardService.findUserId(id, userId), HttpStatus.OK);
     }
+
+    @PostMapping("/{boardId}/likes")
+    public ResponseEntity<Void> like(//@SessionAttribute(name = Const.LOGIN_USER) Long userId,
+                                     @PathVariable Long boardId){
+        Long userId = 1L;
+
+        boardService.likes(boardId, userId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

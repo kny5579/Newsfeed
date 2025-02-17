@@ -24,4 +24,6 @@ public interface BoardService {
     void delete(Long id, Long userId);
 
     Page<UserBoardResponseDto> findUserId(Long id, Long userId);
+
+    void likes(Long boardId, Long userId);
 }
