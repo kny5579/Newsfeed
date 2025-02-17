@@ -30,6 +30,18 @@ public class FollowController {
         return new ResponseEntity<>(followService.getFollowers(userId), HttpStatus.OK);
     }
 
+    @PatchMapping("/{followerId}")
+    public ResponseEntity<String> acceptFollower(@SessionAttribute(name = Const.LOGIN_USER) Long userId,
+                                                 @PathVariable Long followerId) {
+        return new ResponseEntity<>(followService.acceptFollower(userId,followerId), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{followerId}")
+    public ResponseEntity<String> rejectFollower(@SessionAttribute(name = Const.LOGIN_USER) Long userId,
+                                                            @PathVariable Long followerId) {
+        return new ResponseEntity<>(followService.rejectFollower(userId,followerId), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{followerId}")
     public ResponseEntity<String> unfollowUser(@SessionAttribute(name = Const.LOGIN_USER) Long userId,
                                                @PathVariable Long followerId) {

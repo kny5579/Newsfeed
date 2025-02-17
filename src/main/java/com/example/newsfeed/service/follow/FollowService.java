@@ -57,6 +57,25 @@ public class FollowService {
     }
 
     @Transactional
+    public String acceptFollower(Long userId, Long followerId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("not found"));
+
+        User follower = userRepository.findById(followerId)
+                .orElseThrow(() -> new RuntimeException("not found"));
+
+        Follow existingFollow = followRepository.findByUserAndFollower(user,follower)
+                .orElseThrow(() -> new RuntimeException("해당 팔로워를 찾을 수 없습니다."));
+
+        if (!PENDING.equals(existingFollow.getStatus())) {
+            throw new RuntimeException("친구 요청 상태가 아닙니다.");
+        }
+        existingFollow.setStatus(ACCEPTED);
+        followRepository.save(existingFollow);
+        return "친구 수락되었습니다.";
+    }
+
+    @Transactional
     public void unfollowUser(Long userId, Long followerId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("not found"));
@@ -64,7 +83,7 @@ public class FollowService {
         User follower = userRepository.findById(followerId)
                 .orElseThrow(() -> new RuntimeException("not found"));
 
-        Follow existingFollow = followRepository.findById(followerId)
+        Follow existingFollow = followRepository.findByUserAndFollower(user,follower)
                 .orElseThrow(() -> new RuntimeException("해당 팔로워를 찾을 수 없습니다."));
 
         if (!ACCEPTED.equals(existingFollow.getStatus())) {
