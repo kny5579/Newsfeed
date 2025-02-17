@@ -6,6 +6,7 @@ import com.example.newsfeed.dto.boardDto.BoardLikesDto;
 import com.example.newsfeed.dto.boardDto.CommentCountDto;
 import com.example.newsfeed.dto.boardDto.CommentResponseDto;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
+import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
 import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
 import com.example.newsfeed.entity.boardEntity.Comment;
@@ -158,5 +159,39 @@ public class BoardServiceImpl implements BoardService{
                 isBoardLike,
                 board.getUpdatedAt().toLocalDate()
         );
+    }
+
+    @Override
+    @Transactional
+    public void update(Long id, Long userId, UpdateBoardRequestDto dto) {
+
+        // 해당 피드 검색
+        Board board = boardRepository.findById(id)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+
+        // 사용자의 피드인지 검증
+        if(!board.getUser().getId().equals(userId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your feed");
+        }
+
+        // 피드 수정
+        board.save(dto.getContents(), dto.getImage_url());
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id, Long userId) {
+
+        // 해당 피드 검색
+        Board board = boardRepository.findById(id)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+
+        // 사용자의 피드인지 검증
+        if(!board.getUser().getId().equals(userId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your feed");
+        }
+
+        // 피드 삭제
+        boardRepository.delete(board);
     }
 }

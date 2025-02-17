@@ -31,4 +31,9 @@ public class Board extends BaseEntity {
         this.image_url = image_url;
         this.user = user;
     }
+
+    public void save(String contents, String imageUrl) {
+        this.contents = contents;
+        this.image_url = imageUrl;
+    }
 }

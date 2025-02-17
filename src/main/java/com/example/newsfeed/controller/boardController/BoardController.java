@@ -1,7 +1,9 @@
 package com.example.newsfeed.controller.boardController;
 
+import com.example.newsfeed.common.consts.Const;
 import com.example.newsfeed.common.consts.OrderBy;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
+import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
 import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
 import com.example.newsfeed.service.boardService.BoardService;
@@ -35,7 +37,7 @@ public class BoardController {
 
     @GetMapping
     public ResponseEntity<Page<BoardsResponseDto>> findAll(
-            //@SessionAttribute(name = Const.LOGIN_USER) Long id,
+            //@SessionAttribute(name = Const.LOGIN_USER) Long userId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "UPDATED_AT") OrderBy orderBy,
@@ -44,8 +46,8 @@ public class BoardController {
             @RequestParam(required = false) LocalDate updateAtEnd
             ){
 
-        Long id = 1L;
-        Page<BoardsResponseDto> pages = boardService.findAll(id, page, size, orderBy, direction, updateAtStart, updateAtEnd);
+        Long userId = 1L;
+        Page<BoardsResponseDto> pages = boardService.findAll(userId, page, size, orderBy, direction, updateAtStart, updateAtEnd);
 
         return new ResponseEntity<>(pages, HttpStatus.OK);
     }
@@ -57,5 +59,26 @@ public class BoardController {
     ){
         Long userId = 1L;
         return new ResponseEntity<>(boardService.find(id, userId), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> update(
+//            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @PathVariable Long id,
+            @ModelAttribute UpdateBoardRequestDto dto){
+
+        Long userId = 1L;
+        boardService.update(id, userId, dto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> delete(
+//            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @PathVariable Long id){
+        Long userId = 1L;
+        boardService.delete(id, userId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
