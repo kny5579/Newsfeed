@@ -20,4 +20,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("SELECT b FROM Board b WHERE b.updatedAt BETWEEN :updateAtStart AND :updateAtEnd")
     Page<Board> findByUpdateAtBetween (LocalDateTime updateAtStart, LocalDateTime updateAtEnd, Pageable pageable);
+
+    Page<Board> findAllByUserId(Long id, Pageable pageable);
 }

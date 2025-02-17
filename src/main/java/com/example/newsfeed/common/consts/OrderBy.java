@@ -3,9 +3,7 @@ package com.example.newsfeed.common.consts;
 public enum OrderBy {
 
     CREATED_AT("createdAt"),
-    UPDATED_AT("updatedAt"),
-    LIKE("like");
-
+    UPDATED_AT("updatedAt");
 
     private final String fieldName;
 

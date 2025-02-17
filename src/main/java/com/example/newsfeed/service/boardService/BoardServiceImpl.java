@@ -9,6 +9,8 @@ import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
 import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
+import com.example.newsfeed.dto.boardDto.response.UserBoardFeedResponseDto;
+import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
 import com.example.newsfeed.entity.boardEntity.Comment;
 import com.example.newsfeed.entity.boardEntity.Board;
 import com.example.newsfeed.entity.userEntity.User;
@@ -33,7 +35,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
@@ -50,7 +52,7 @@ public class BoardServiceImpl implements BoardService{
         Board savedBoard = boardRepository.save(board);
 
         // 저장 내용 검증
-        if(savedBoard.getUser() == null || !savedBoard.getUser().getId().equals(id)){
+        if (savedBoard.getUser() == null || !savedBoard.getUser().getId().equals(id)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Save failed");
         }
     }
@@ -62,19 +64,18 @@ public class BoardServiceImpl implements BoardService{
             LocalDate updateAtStart, LocalDate updateAtEnd) {
 
         // 페이징 조건
-        System.out.println(orderBy.getFieldName());
-        Pageable pageable = PageRequest.of(page-1, size, Sort.by(direction, orderBy.getFieldName()));
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(direction, orderBy.getFieldName()));
         Page<Board> pages;
 
         // 날짜 조건 입력에 따라 페이징
-        if(updateAtStart == null &&  updateAtEnd == null){          // 둘 다 null
+        if (updateAtStart == null && updateAtEnd == null) {          // 둘 다 null
             pages = boardRepository.findAll(pageable);
-        } else if(updateAtStart != null &&  updateAtEnd == null){   // updateAtEnd만 null
+        } else if (updateAtStart != null && updateAtEnd == null) {   // updateAtEnd만 null
             pages = boardRepository.findByUpdateAtAfter(updateAtStart.atStartOfDay(), pageable);
-        } else if (updateAtStart == null &&  updateAtEnd != null) { // updateAtStart만 null
+        } else if (updateAtStart == null && updateAtEnd != null) { // updateAtStart만 null
             pages = boardRepository.findByUpdateAtBefore(updateAtEnd.atStartOfDay(), pageable);
         } else {                                                    // 둘 다 null이 아님
-            pages =boardRepository.findByUpdateAtBetween(updateAtStart.atStartOfDay(), updateAtEnd.atStartOfDay(), pageable);
+            pages = boardRepository.findByUpdateAtBetween(updateAtStart.atStartOfDay(), updateAtEnd.atStartOfDay(), pageable);
         }
 
         // 피드 아이디 추출
@@ -167,10 +168,10 @@ public class BoardServiceImpl implements BoardService{
 
         // 해당 피드 검색
         Board board = boardRepository.findById(id)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
 
         // 사용자의 피드인지 검증
-        if(!board.getUser().getId().equals(userId)){
+        if (!board.getUser().getId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your feed");
         }
 
@@ -184,14 +185,65 @@ public class BoardServiceImpl implements BoardService{
 
         // 해당 피드 검색
         Board board = boardRepository.findById(id)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
 
         // 사용자의 피드인지 검증
-        if(!board.getUser().getId().equals(userId)){
+        if (!board.getUser().getId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your feed");
         }
 
         // 피드 삭제
         boardRepository.delete(board);
+    }
+
+    @Override
+    public Page<UserBoardResponseDto> findUserId(Long id, Long userId) {
+
+        if (id.equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your id");
+        }
+
+        // 페이징 조건
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "updateAt"));
+        Page<Board> pages = boardRepository.findAllByUserId(id, pageable);
+
+        // 피드 아이디 추출
+        List<Long> boardIds = pages.stream().map(Board::getId).toList();
+
+        // 댓글 수 조회
+        List<CommentCountDto> commentCount = commentRepository.countByBoardIds(boardIds);
+        Map<Long, Long> commentCountMap = commentCount.stream()
+                .collect(Collectors.toMap(CommentCountDto::getBoardId, CommentCountDto::getCount));
+
+        // 피드 좋아요 수 조회
+        List<BoardLikesDto> boardLikesCount = boardLikesRepository.countByBoardIds(id, boardIds);
+        Map<Long, Long> boardLikesCountMap = boardLikesCount.stream()
+                .collect(Collectors.toMap(BoardLikesDto::getBoardId, BoardLikesDto::getCount));
+
+        // 피드 수 조회
+        Long totalFeeds = pages.getTotalElements();
+
+        // 팔로워 수 조회  이후 합치고 추가
+        int follower = 1;
+
+        // 팔로우 수 조회  이후 합치고 추가
+        int follow = 1;
+
+        // 개인 페이지 피드
+        Page<UserBoardFeedResponseDto> feeds = pages.map(board -> new UserBoardFeedResponseDto(
+                board.getImage_url(),
+                boardLikesCountMap.getOrDefault(board.getId(), 0L).intValue(),
+                commentCountMap.getOrDefault(board.getId(), 0L).intValue()
+        ));
+
+
+        return pages.map(board -> new UserBoardResponseDto(
+                board.getUser().getName(),
+                board.getUser().getImg_url(),
+                totalFeeds.intValue(),
+                follower,
+                follow,
+                feeds
+        ));
     }
 }

@@ -6,7 +6,9 @@ import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
 import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
+import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
 import com.example.newsfeed.service.boardService.BoardService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -52,7 +54,7 @@ public class BoardController {
         return new ResponseEntity<>(pages, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/board/{id}")
     public ResponseEntity<BoardResponseDto> find(
             //@SessionAttribute(name = Const.LOGIN_USER) Long userId,
             @PathVariable Long id
@@ -73,6 +75,7 @@ public class BoardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping
     public ResponseEntity<Void> delete(
 //            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
             @PathVariable Long id){
@@ -80,5 +83,15 @@ public class BoardController {
         boardService.delete(id, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Page<UserBoardResponseDto>> findUserId( // 그냥 세션에서 유저 아이디만 받아도 되는데 매팽을 어떻게 할지 때문에 나중에 더 생각하기
+                                                                  //@SessionAttribute(name = Const.LOGIN_USER) Long userId,
+                                                                  @PathVariable Long id){
+
+        Long userId = 1L;
+
+        return new ResponseEntity<>(boardService.findUserId(id, userId), HttpStatus.OK);
     }
 }
