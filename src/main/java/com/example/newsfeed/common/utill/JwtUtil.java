@@ -13,22 +13,22 @@ public class JwtUtil {
     private final String SECRET_KEY = "1234";
     private final long EXPIRATION_TIME = 1000 * 60 * 60;
 
-    public String generateToken(String email) {
+    public String generateToken(Long userId) {
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(String.valueOf(userId))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
-    public boolean validateToken(String token, String email) {
-        final String extractedEmail = extractEmail(token);
-        return (extractedEmail.equals(email) && !isTokenExpired(token));
+    public boolean validateToken(String token, Long userId) {
+        final Long extractedUserId = extractUserId(token);
+        return (extractedUserId.equals(userId) && !isTokenExpired(token));
     }
 
-    public String extractEmail(String token) {
-        return extractAllClaims(token).getSubject();
+    public Long extractUserId(String token) {
+        return Long.parseLong(extractAllClaims(token).getSubject());
     }
 
     private Claims extractAllClaims(String token) {

@@ -4,11 +4,11 @@ import com.example.newsfeed.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "user")
 @NoArgsConstructor
 public class User extends BaseEntity {
