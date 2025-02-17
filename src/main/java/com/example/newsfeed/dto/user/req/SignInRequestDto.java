@@ -1,4 +1,4 @@
-package com.example.newsfeed.user.dto.req;
+package com.example.newsfeed.dto.user.req;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

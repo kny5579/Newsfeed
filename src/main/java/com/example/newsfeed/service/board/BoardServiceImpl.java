@@ -13,7 +13,7 @@ import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
 import com.example.newsfeed.entity.board.BoardLikes;
 import com.example.newsfeed.entity.board.Comment;
 import com.example.newsfeed.entity.board.Board;
-import com.example.newsfeed.entity.userEntity.User;
+import com.example.newsfeed.entity.user.User;
 import com.example.newsfeed.repository.board.BoardLikesRepository;
 import com.example.newsfeed.repository.board.CommentLikesRepository;
 import com.example.newsfeed.repository.board.CommentRepository;

@@ -1,13 +1,11 @@
-package com.example.newsfeed.user.controller;
+package com.example.newsfeed.controller.user;
 
 import com.example.newsfeed.common.utill.JwtUtil;
-import com.example.newsfeed.user.dto.req.DeleteRequestDto;
-import com.example.newsfeed.user.dto.req.SignUpRequestDto;
-import com.example.newsfeed.user.dto.req.UpdateRequestDto;
-import com.example.newsfeed.user.dto.res.SignInResponseDto;
-import com.example.newsfeed.user.dto.res.UserResponseDto;
-import com.example.newsfeed.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.newsfeed.dto.user.req.DeleteRequestDto;
+import com.example.newsfeed.dto.user.req.SignUpRequestDto;
+import com.example.newsfeed.dto.user.req.UpdateRequestDto;
+import com.example.newsfeed.dto.user.res.UserResponseDto;
+import com.example.newsfeed.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

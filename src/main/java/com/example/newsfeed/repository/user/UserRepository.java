@@ -1,4 +1,4 @@
-package com.example.newsfeed.user.repository;
+package com.example.newsfeed.repository.user;
 
 import com.example.newsfeed.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

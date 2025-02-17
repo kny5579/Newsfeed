@@ -1,8 +1,8 @@
-package com.example.newsfeed.user.controller;
+package com.example.newsfeed.controller.user;
 
-import com.example.newsfeed.user.dto.req.SignInRequestDto;
-import com.example.newsfeed.user.dto.res.SignInResponseDto;
-import com.example.newsfeed.user.service.UserService;
+import com.example.newsfeed.dto.user.req.SignInRequestDto;
+import com.example.newsfeed.dto.user.res.SignInResponseDto;
+import com.example.newsfeed.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

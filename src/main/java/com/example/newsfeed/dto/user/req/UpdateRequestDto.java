@@ -1,4 +1,4 @@
-package com.example.newsfeed.user.dto.req;
+package com.example.newsfeed.dto.user.req;
 
 import lombok.Getter;
 
