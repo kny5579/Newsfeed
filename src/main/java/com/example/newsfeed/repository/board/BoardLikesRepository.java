@@ -1,6 +1,6 @@
-package com.example.newsfeed.repository.boardRepository;
+package com.example.newsfeed.repository.board;
 
-import com.example.newsfeed.entity.boardEntity.BoardLikes;
+import com.example.newsfeed.entity.board.BoardLikes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Getter
 @Table(name = "board")
@@ -20,6 +21,9 @@ public class Board extends BaseEntity {
 
     private String image_url;
 
+    @Column(name = "likes_cnt")
+    private Long likeCnt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -33,5 +37,13 @@ public class Board extends BaseEntity {
     public void save(String contents, String imageUrl) {
         this.contents = contents;
         this.image_url = imageUrl;
+    }
+
+    public void like() {
+        this.likeCnt++;
+    }
+
+    public void cansle() {
+        this.likeCnt--;
     }
 }
