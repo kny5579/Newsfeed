@@ -27,7 +27,7 @@ CREATE TABLE follow
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     follower_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    status ENUM('PENDING','ACCEPTED','REJECTED') DEFAULT 'PENDING',
+    status ENUM('PENDING','ACCEPTED','REJECTED'), -- default 제거
     foreign key (follower_id) references user(id) ON DELETE CASCADE,
     foreign key (user_id) references user(id) ON DELETE CASCADE,
     UNIQUE KEY unique_follow (follower_id, user_id)
