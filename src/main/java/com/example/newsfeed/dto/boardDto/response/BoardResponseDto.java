@@ -3,7 +3,6 @@ package com.example.newsfeed.dto.boardDto.response;
 import com.example.newsfeed.dto.comment.responseDto.CommentResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 
