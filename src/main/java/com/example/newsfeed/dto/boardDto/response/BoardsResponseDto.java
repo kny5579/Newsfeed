@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 public class BoardsResponseDto {
+
     private String name;
     private String user_image_url;
     private String board_image_url;

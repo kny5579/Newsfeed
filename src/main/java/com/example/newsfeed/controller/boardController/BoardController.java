@@ -27,7 +27,7 @@ public class BoardController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestHeader("Authorization") String token, @ModelAttribute @Valid BoardSaveRequestDto dto
-    ){
+    ) {
 
         Long loginedId = jwtUtil.getValidatedUserId(token);
         boardService.save(dto, loginedId);
@@ -51,7 +51,7 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardResponseDto> find(@PathVariable @Min(1) Long boardId){
+    public ResponseEntity<BoardResponseDto> find(@PathVariable @Min(1) Long boardId) {
 
         return new ResponseEntity<>(boardService.find(boardId), HttpStatus.OK);
     }
@@ -60,7 +60,7 @@ public class BoardController {
     public ResponseEntity<Void> update(
             @RequestHeader("Authorization") String token,
             @PathVariable @Min(1) Long boardId,
-            @Valid @ModelAttribute UpdateBoardRequestDto dto){
+            @Valid @ModelAttribute UpdateBoardRequestDto dto) {
 
         Long loginedId = jwtUtil.getValidatedUserId(token);
         boardService.update(boardId, loginedId, dto);
@@ -71,7 +71,7 @@ public class BoardController {
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> delete(
             @RequestHeader("Authorization") String token,
-            @PathVariable @Min(1) Long boardId){
+            @PathVariable @Min(1) Long boardId) {
 
         Long loginedId = jwtUtil.getValidatedUserId(token);
         boardService.delete(boardId, loginedId);
@@ -83,7 +83,7 @@ public class BoardController {
     public ResponseEntity<Page<UserBoardFeedResponseDto>> findUserIdFeed(
             @PathVariable @Min(1) Long userId,
             @RequestParam(defaultValue = "1") @Min(1) int page,
-            @RequestParam(defaultValue = "10") @Min(1) int size){
+            @RequestParam(defaultValue = "10") @Min(1) int size) {
 
         return new ResponseEntity<>(boardService.findUserIdFeed(userId, page, size), HttpStatus.OK);
     }
@@ -91,7 +91,7 @@ public class BoardController {
     @PostMapping("/{boardId}/likes")
     public ResponseEntity<Void> like(
             @RequestHeader("Authorization") String token,
-            @PathVariable @Min(1) Long boardId){
+            @PathVariable @Min(1) Long boardId) {
 
         Long loginedId = jwtUtil.getValidatedUserId(token);
 
@@ -101,7 +101,7 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}/likes")
-    public ResponseEntity<Page<LikeUsersDto>> likeList(@PathVariable @Min(1) Long boardId){
+    public ResponseEntity<Page<LikeUsersDto>> likeList(@PathVariable @Min(1) Long boardId) {
 
         return new ResponseEntity<>(boardService.likeList(boardId), HttpStatus.OK);
     }

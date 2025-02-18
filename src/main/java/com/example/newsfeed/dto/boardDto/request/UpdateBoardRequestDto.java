@@ -16,5 +16,4 @@ public class UpdateBoardRequestDto {
     @NotNull
     @Size(max = 1000)
     private final String image_url;
-
 }
