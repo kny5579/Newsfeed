@@ -4,7 +4,7 @@ import com.example.newsfeed.common.config.PasswordEncoder;
 import com.example.newsfeed.common.exception.InvalidCredentialException;
 import com.example.newsfeed.common.exception.InvalidPasswordFormatException;
 import com.example.newsfeed.common.exception.SamePasswordException;
-import com.example.newsfeed.common.exception.UserNotFoundException;
+import com.example.newsfeed.common.exception.NotFoundException;
 import com.example.newsfeed.common.utill.JwtUtil;
 import com.example.newsfeed.dto.user.req.*;
 import com.example.newsfeed.dto.user.res.SignInResponseDto;
@@ -82,7 +82,7 @@ public class UserService {
 
     public void update(Long userId, UpdateRequestDto dto) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("사용자를 찾을 수 없습니다.")
+                () -> new NotFoundException("사용자를 찾을 수 없습니다.")
         );
 
         // 기존 비밀번호 검증
@@ -98,7 +98,7 @@ public class UserService {
 
     public void delete(Long userId, DeleteRequestDto dto) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("사용자를 찾을 수 없습니다.")
+                () -> new NotFoundException("사용자를 찾을 수 없습니다.")
         );
 
         // 기존 비밀번호 검증
@@ -117,7 +117,7 @@ public class UserService {
     @Transactional
     public void updateProfile(Long id, UserProfileRequestDto dto) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("사용자를 찾을 수 없습니다.")
+                () -> new NotFoundException("사용자를 찾을 수 없습니다.")
         );
 
         // 비밀번호 변경 시, 기존 비밀번호 검증
@@ -164,7 +164,7 @@ public class UserService {
     public UserProfileResponseDto getProfile(Long id) {
         //사용자가 존재하는지 확인
         User user = userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+                () -> new NotFoundException("사용자를 찾을 수 없습니다."));
         //민감한 정보 제외한 프로필 반환(비밀번호 제외)
         return new UserProfileResponseDto(
                 user.getId(),

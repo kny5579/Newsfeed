@@ -1,22 +1,22 @@
 package com.example.newsfeed.service.board;
 
 import com.example.newsfeed.common.consts.OrderBy;
-import com.example.newsfeed.dto.comment.CommentLikesDto;
-import com.example.newsfeed.dto.comment.CommentCountDto;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
 import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
 import com.example.newsfeed.dto.boardDto.response.UserBoardFeedResponseDto;
 import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
+import com.example.newsfeed.dto.comment.CommentCountDto;
+import com.example.newsfeed.dto.comment.CommentLikesDto;
 import com.example.newsfeed.dto.comment.responseDto.CommentResponseDto;
-import com.example.newsfeed.entity.board.BoardLikes;
 import com.example.newsfeed.entity.board.Board;
+import com.example.newsfeed.entity.board.BoardLikes;
 import com.example.newsfeed.entity.comment.Comment;
 import com.example.newsfeed.entity.user.User;
 import com.example.newsfeed.repository.board.BoardLikesRepository;
-import com.example.newsfeed.repository.comment.CommentLikesRepository;
 import com.example.newsfeed.repository.board.BoardRepository;
+import com.example.newsfeed.repository.comment.CommentLikesRepository;
 import com.example.newsfeed.repository.comment.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -129,8 +129,7 @@ public class BoardService {
                 comment.getUser().getImgUrl(),
                 comment.getUser().getName(),
                 comment.getContents(),
-                commentLikesCountMap.getOrDefault(comment.getId(), 0L).intValue(),
-                commentLikescheckMap.getOrDefault(comment.getId(), false),
+                (long) commentLikesCountMap.getOrDefault(comment.getId(), 0L).intValue(),
                 comment.getUpdatedAt()
         ));
 
@@ -239,9 +238,9 @@ public class BoardService {
         // 사용자가 해당 피드에 좋아요를 눌렀는지 조회하고 누르지 않았았으면 좋아요 처리
         Optional<BoardLikes> boardLike = boardLikesRepository.findByBoardIdAndUserId(boardId, userId);
 
-        if(boardLike.isEmpty()){
+        if (boardLike.isEmpty()) {
             boardLikesRepository.save((new BoardLikes(board, board.getUser())));
-        }else{
+        } else {
             boardLikesRepository.delete(boardLike.get());
             board.cansle();
         }

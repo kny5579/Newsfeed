@@ -1,10 +1,12 @@
 package com.example.newsfeed.service.comment;
 
+import com.example.newsfeed.common.exception.ForbiddenException;
+import com.example.newsfeed.common.exception.NotFoundException;
 import com.example.newsfeed.dto.comment.requestDto.CommentRequestDto;
 import com.example.newsfeed.dto.comment.responseDto.CommentResponseDto;
 import com.example.newsfeed.entity.board.Board;
-import com.example.newsfeed.entity.comment.CommentLikes;
 import com.example.newsfeed.entity.comment.Comment;
+import com.example.newsfeed.entity.comment.CommentLikes;
 import com.example.newsfeed.entity.user.User;
 import com.example.newsfeed.repository.board.BoardRepository;
 import com.example.newsfeed.repository.comment.CommentLikesRepository;
@@ -31,17 +33,18 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createComment(Long userId, Long boardId, CommentRequestDto dto) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new RuntimeException("Board not found"));
+                .orElseThrow(() -> new NotFoundException("해당 게시글이 존재하지 않습니다."));
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("해당 사용자가 존재하지 않습니다."));
 
-        Comment comment = new Comment(dto.getContents(),board,user);
+        Comment comment = new Comment(dto.getContents(), board, user);
         commentRepository.save(comment);
         return new CommentResponseDto(
                 comment.getId(),
                 user.getImgUrl(),
                 user.getName(),
                 comment.getContents(),
+                comment.getLikeCnt(),
                 comment.getCreatedAt()
         );
     }
@@ -50,11 +53,12 @@ public class CommentService {
     public List<CommentResponseDto> getCommentByBoard(Long boardId) {
         List<Comment> comments = commentRepository.findByBoardId(boardId);
         return comments.stream()
-                .map(c->new CommentResponseDto(
+                .map(c -> new CommentResponseDto(
                         c.getId(),
                         c.getUser().getImgUrl(),
                         c.getUser().getName(),
                         c.getContents(),
+                        c.getLikeCnt(),
                         c.getUpdatedAt()
                 )).toList();
     }
@@ -62,9 +66,9 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long userId, Long commentId, CommentRequestDto dto) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 댓글이 존재하지 않습니다."));
         if (!comment.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.");
+            throw new ForbiddenException("본인이 작성한 댓글만 수정할 수 있습니다.");
         }
         comment.update(dto.getContents());
         return new CommentResponseDto(
@@ -72,6 +76,7 @@ public class CommentService {
                 comment.getUser().getImgUrl(),
                 comment.getUser().getName(),
                 comment.getContents(),
+                comment.getBoard().getLikeCnt(),
                 comment.getUpdatedAt()
         );
     }
@@ -79,13 +84,14 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long userId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("해당 댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 댓글이 존재하지 않습니다."));
         if (!comment.getUser().getId().equals(userId)) {
-            throw new RuntimeException("본인이 작성한 댓글만 삭제할 수 있습니다.");
+            throw new ForbiddenException("본인이 작성한 댓글만 삭제할 수 있습니다.");
         }
         commentRepository.delete(comment);
     }
 
+    @Transactional
     public void likes(Long commentId, Long userId) {
 
         // 해당 댓글인지 조회
@@ -100,9 +106,9 @@ public class CommentService {
         // 사용자가 해당 댓글에 좋아요를 눌렀는지 조회하고 누르지 않았았으면 좋아요 취소 처리
         Optional<CommentLikes> commentLikes = commentLikesRepository.findByCommentIdAndUserId(commentId, userId);
 
-        if(commentLikes.isEmpty()){
+        if (commentLikes.isEmpty()) {
             commentLikesRepository.save((new CommentLikes(comment, comment.getUser())));
-        }else{
+        } else {
             commentLikesRepository.delete(commentLikes.get());
         }
     }

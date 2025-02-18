@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment,Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByBoardId(Long boardId);
 
-    @Query("select new com.example.newsfeed.dto.boardDto.CommentCountDto(c.board.id, count(c)) " +
+    @Query("select new com.example.newsfeed.dto.comment.CommentCountDto(c.board.id, count(c)) " +
             "from Comment c " +
             "where c.board.id in :boardIds " +
             "group by c.board.id")

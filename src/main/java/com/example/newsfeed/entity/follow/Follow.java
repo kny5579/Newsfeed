@@ -32,7 +32,7 @@ public class Follow {
     }
 
     public Follow(User follower, User user, Status status) {
-        this.follower= follower;
+        this.follower = follower;
         this.user = user;
         this.status = status;
     }

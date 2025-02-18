@@ -1,11 +1,11 @@
 package com.example.newsfeed.controller.comment;
 
+import com.example.newsfeed.common.utill.JwtUtil;
 import com.example.newsfeed.dto.comment.requestDto.CommentRequestDto;
 import com.example.newsfeed.dto.comment.responseDto.CommentResponseDto;
-import com.example.newsfeed.repository.comment.CommentRepository;
 import com.example.newsfeed.service.comment.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,12 +19,19 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/boards/{boardId}/comments")
-    public ResponseEntity<CommentResponseDto> createComment(@SessionAttribute Long userId,
-                                                            @PathVariable Long boardId,
-                                                            CommentRequestDto commentRequestDto) {
-        return new ResponseEntity<>(commentService.createComment(userId, boardId, commentRequestDto), HttpStatus.CREATED);
+    public ResponseEntity<CommentResponseDto> createComment(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long boardId,
+            @Valid @RequestBody CommentRequestDto commentRequestDto) {
+
+        Long userId = jwtUtil.getValidatedUserId(token);
+        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(commentService.createComment(userId, boardId, commentRequestDto));
     }
 
     @GetMapping("/boards/{boardId}/comments")
@@ -33,23 +40,30 @@ public class CommentController {
     }
 
     @PatchMapping("/comments/{commentId}")
-    public ResponseEntity<CommentResponseDto> updateComment(@SessionAttribute Long userId,
+    public ResponseEntity<CommentResponseDto> updateComment(@RequestHeader("Authorization") String token,
                                                             @PathVariable Long commentId,
-                                                            CommentRequestDto commentRequestDto) {
-        return new ResponseEntity<>(commentService.updateComment(userId, commentId, commentRequestDto),HttpStatus.OK);
+                                                            @Valid @RequestBody CommentRequestDto commentRequestDto) {
+        Long userId = jwtUtil.getValidatedUserId(token);
+        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return new ResponseEntity<>(commentService.updateComment(userId, commentId, commentRequestDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<String> deleteComment(@SessionAttribute Long userId, @PathVariable Long commentId) {
+    public ResponseEntity<String> deleteComment(@RequestHeader("Authorization") String token,
+                                                @PathVariable Long commentId) {
+        Long userId = jwtUtil.getValidatedUserId(token);
+        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         commentService.deleteComment(userId, commentId);
         return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
     }
 
     @PostMapping("/{commentId}/likes")
-    public ResponseEntity<Void> like(//@SessionAttribute(name = Const.LOGIN_USER) Long userId,
-                                     @PathVariable Long commentId){
-        Long userId = 1L;
+    public ResponseEntity<Void> like(/*@RequestHeader("Authorization") String token,*/Long userId,
+                                     @PathVariable Long commentId) {
+        /*Long userId = jwtUtil.getValidatedUserId(token);
+        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();*/
 
+        userId = 1L;
         commentService.likes(commentId, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
