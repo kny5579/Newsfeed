@@ -1,25 +1,21 @@
-package com.example.newsfeed.user.service;
+package com.example.newsfeed.service.user;
 
 import com.example.newsfeed.common.config.PasswordEncoder;
 import com.example.newsfeed.common.exception.InvalidCredentialException;
 import com.example.newsfeed.common.exception.UserNotFoundException;
 import com.example.newsfeed.common.utill.JwtUtil;
-import com.example.newsfeed.entity.User;
-import com.example.newsfeed.user.dto.req.DeleteRequestDto;
-import com.example.newsfeed.user.dto.req.SignInRequestDto;
-import com.example.newsfeed.user.dto.req.SignUpRequestDto;
-import com.example.newsfeed.user.dto.req.UpdateRequestDto;
-import com.example.newsfeed.user.dto.res.SignInResponseDto;
-import com.example.newsfeed.user.dto.res.UserResponseDto;
-import com.example.newsfeed.user.repository.UserRepository;
+import com.example.newsfeed.dto.user.req.DeleteRequestDto;
+import com.example.newsfeed.dto.user.req.SignInRequestDto;
+import com.example.newsfeed.dto.user.req.SignUpRequestDto;
+import com.example.newsfeed.dto.user.req.UpdateRequestDto;
+import com.example.newsfeed.dto.user.res.SignInResponseDto;
+import com.example.newsfeed.dto.user.res.UserResponseDto;
+import com.example.newsfeed.entity.user.User;
+import com.example.newsfeed.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

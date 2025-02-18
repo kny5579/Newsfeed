@@ -1,7 +1,7 @@
 package com.example.newsfeed.repository.follow;
 
 import com.example.newsfeed.entity.follow.Follow;
-import com.example.newsfeed.entity.userEntity.User;
+import com.example.newsfeed.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

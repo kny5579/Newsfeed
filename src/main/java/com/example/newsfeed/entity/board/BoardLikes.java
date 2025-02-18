@@ -1,30 +1,31 @@
-package com.example.newsfeed.entity.boardEntity;
+package com.example.newsfeed.entity.board;
 
-import com.example.newsfeed.entity.userEntity.User;
+import com.example.newsfeed.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "comment_likes")
+@Table(name = "board_likes")
 @NoArgsConstructor
-public class CommentLikes {
+public class BoardLikes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public CommentLikes(Comment comment, User user){
-        this.comment = comment;
+    public BoardLikes(Board board, User user){
+        this.board =board;
         this.user = user;
+        this.board.like();
     }
 }

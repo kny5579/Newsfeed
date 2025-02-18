@@ -1,23 +1,23 @@
-package com.example.newsfeed.service.boardService;
+package com.example.newsfeed.service.board;
 
 import com.example.newsfeed.common.consts.OrderBy;
-import com.example.newsfeed.dto.boardDto.CommentLikesDto;
-import com.example.newsfeed.dto.boardDto.CommentCountDto;
-import com.example.newsfeed.dto.boardDto.CommentResponseDto;
+import com.example.newsfeed.dto.comment.CommentLikesDto;
+import com.example.newsfeed.dto.comment.CommentCountDto;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
 import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
 import com.example.newsfeed.dto.boardDto.response.UserBoardFeedResponseDto;
 import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
-import com.example.newsfeed.entity.boardEntity.BoardLikes;
-import com.example.newsfeed.entity.boardEntity.Comment;
-import com.example.newsfeed.entity.boardEntity.Board;
-import com.example.newsfeed.entity.userEntity.User;
-import com.example.newsfeed.repository.boardRepository.BoardLikesRepository;
-import com.example.newsfeed.repository.boardRepository.CommentLikesRepository;
-import com.example.newsfeed.repository.boardRepository.CommentRepository;
-import com.example.newsfeed.repository.boardRepository.BoardRepository;
+import com.example.newsfeed.dto.comment.responseDto.CommentResponseDto;
+import com.example.newsfeed.entity.board.BoardLikes;
+import com.example.newsfeed.entity.board.Board;
+import com.example.newsfeed.entity.comment.Comment;
+import com.example.newsfeed.entity.user.User;
+import com.example.newsfeed.repository.board.BoardLikesRepository;
+import com.example.newsfeed.repository.comment.CommentLikesRepository;
+import com.example.newsfeed.repository.board.BoardRepository;
+import com.example.newsfeed.repository.comment.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,14 +36,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService {
+public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardLikesRepository boardLikesRepository;
     private final CommentRepository commentRepository;
     private final CommentLikesRepository commentLikesRepository;
 
-    @Override
     @Transactional
     public void save(BoardSaveRequestDto dto, Long id) {
 
@@ -58,7 +57,6 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    @Override
     public Page<BoardsResponseDto> findAll(
             Long id, int page, int size,
             OrderBy orderBy, Sort.Direction direction,
@@ -99,14 +97,11 @@ public class BoardServiceImpl implements BoardService {
         ));
     }
 
-    @Override
     public BoardResponseDto find(Long id, Long userId) {
 
         // 피드 검색 후 검증
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
-
-        // 내일? 오늘? 유저 비공개 확인하는거 테이블이던 뭐던 추가해야 한다고 말하기
 
         // 해당 피드 좋아요 여부
         boolean isBoardLike = board.getUser().getId().equals(board.getId()) || board.getLikeCnt() <= 0;
@@ -130,12 +125,13 @@ public class BoardServiceImpl implements BoardService {
 
         // 댓글 페이징
         Page<CommentResponseDto> commentPages = pages.map(comment -> new CommentResponseDto(
+                comment.getId(),
                 comment.getUser().getImgUrl(),
                 comment.getUser().getName(),
                 comment.getContents(),
                 commentLikesCountMap.getOrDefault(comment.getId(), 0L).intValue(),
                 commentLikescheckMap.getOrDefault(comment.getId(), false),
-                comment.getUpdatedAt().toLocalDate()
+                comment.getUpdatedAt()
         ));
 
         return new BoardResponseDto(
@@ -150,7 +146,6 @@ public class BoardServiceImpl implements BoardService {
         );
     }
 
-    @Override
     @Transactional
     public void update(Long id, Long userId, UpdateBoardRequestDto dto) {
 
@@ -167,7 +162,6 @@ public class BoardServiceImpl implements BoardService {
         board.save(dto.getContents(), dto.getImage_url());
     }
 
-    @Override
     @Transactional
     public void delete(Long id, Long userId) {
 
@@ -184,7 +178,6 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.delete(board);
     }
 
-    @Override
     public Page<UserBoardResponseDto> findUserId(Long id, Long userId) {
 
         if (!id.equals(userId)) {
@@ -231,7 +224,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
-    @Override
     @Transactional
     public void likes(Long boardId, Long userId) {
 

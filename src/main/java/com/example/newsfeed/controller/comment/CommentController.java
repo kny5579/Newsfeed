@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class CommentController {
     }
 
     @GetMapping("/boards/{boardId}/comments")
-    public ResponseEntity<CommentResponseDto> getCommentByBoard(@PathVariable Long boardId) {
+    public ResponseEntity<List<CommentResponseDto>> getCommentByBoard(@PathVariable Long boardId) {
         return new ResponseEntity<>(commentService.getCommentByBoard(boardId), HttpStatus.OK);
     }
 
@@ -34,12 +36,22 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> updateComment(@SessionAttribute Long userId,
                                                             @PathVariable Long commentId,
                                                             CommentRequestDto commentRequestDto) {
-        return new ResponseEntity<>(commentService.updateComment(userId, commentId, commentRequestDto));
+        return new ResponseEntity<>(commentService.updateComment(userId, commentId, commentRequestDto),HttpStatus.OK);
     }
 
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<String> deleteComment(@SessionAttribute Long userId, @PathVariable Long commentId) {
         commentService.deleteComment(userId, commentId);
         return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
+    }
+
+    @PostMapping("/{commentId}/likes")
+    public ResponseEntity<Void> like(//@SessionAttribute(name = Const.LOGIN_USER) Long userId,
+                                     @PathVariable Long commentId){
+        Long userId = 1L;
+
+        commentService.likes(commentId, userId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

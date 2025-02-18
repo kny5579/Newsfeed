@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -14,5 +15,5 @@ public class CommentResponseDto {
     private String contents;
     private int likeCnt;
     private boolean like;
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 }

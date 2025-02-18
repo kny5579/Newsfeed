@@ -2,7 +2,7 @@ package com.example.newsfeed.service.follow;
 
 import com.example.newsfeed.dto.follow.responseDto.FollowResponseDto;
 import com.example.newsfeed.entity.follow.Follow;
-import com.example.newsfeed.entity.userEntity.User;
+import com.example.newsfeed.entity.user.User;
 import com.example.newsfeed.repository.follow.FollowRepository;
 import com.example.newsfeed.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;

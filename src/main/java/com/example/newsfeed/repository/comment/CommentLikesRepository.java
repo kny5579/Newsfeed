@@ -1,10 +1,9 @@
-package com.example.newsfeed.repository.boardRepository;
+package com.example.newsfeed.repository.comment;
 
-import com.example.newsfeed.dto.boardDto.CommentLikesDto;
-import com.example.newsfeed.entity.boardEntity.CommentLikes;
+import com.example.newsfeed.dto.comment.CommentLikesDto;
+import com.example.newsfeed.entity.comment.CommentLikes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

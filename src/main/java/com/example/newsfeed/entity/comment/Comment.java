@@ -2,7 +2,7 @@ package com.example.newsfeed.entity.comment;
 
 import com.example.newsfeed.common.entity.BaseEntity;
 import com.example.newsfeed.entity.board.Board;
-import com.example.newsfeed.entity.userEntity.User;
+import com.example.newsfeed.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,4 +26,14 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Comment(String contents, Board board, User user) {
+        this.contents = contents;
+        this.board = board;
+        this.user = user;
+    }
+
+    public void update(String contents) {
+        this.contents = contents;
+    }
 }
