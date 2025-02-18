@@ -1,6 +1,5 @@
-package com.example.newsfeed.controller.user;
+package com.example.newsfeed.common.aws;
 
-import com.example.newsfeed.service.user.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

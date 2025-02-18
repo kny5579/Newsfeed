@@ -1,4 +1,4 @@
-package com.example.newsfeed.common.config;
+package com.example.newsfeed.common.aws;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
