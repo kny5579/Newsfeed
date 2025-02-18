@@ -2,7 +2,8 @@ package com.example.newsfeed.dto.boardDto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -13,5 +14,5 @@ public class UserBoardResponseDto {
     private int feedCnt;
     private int followerCnt;
     private int followCnt;
-    private Page<UserBoardFeedResponseDto> userBoardFeeds;
+    private List<UserBoardFeedResponseDto> userBoardFeeds;
 }

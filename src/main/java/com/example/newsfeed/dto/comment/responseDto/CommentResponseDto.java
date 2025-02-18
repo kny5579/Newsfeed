@@ -14,6 +14,5 @@ public class CommentResponseDto {
     private String name;
     private String contents;
     private int likeCnt;
-    private boolean like;
     private LocalDateTime updatedAt;
 }

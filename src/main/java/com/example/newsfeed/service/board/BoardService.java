@@ -7,7 +7,6 @@ import com.example.newsfeed.dto.comment.CommentCountDto;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
 import com.example.newsfeed.dto.comment.responseDto.CommentResponseDto;
-import com.example.newsfeed.dto.follow.responseDto.FollowResponseDto;
 import com.example.newsfeed.entity.board.BoardLikes;
 import com.example.newsfeed.entity.board.Board;
 import com.example.newsfeed.entity.comment.Comment;
@@ -16,7 +15,6 @@ import com.example.newsfeed.repository.board.BoardLikesRepository;
 import com.example.newsfeed.repository.comment.CommentLikesRepository;
 import com.example.newsfeed.repository.board.BoardRepository;
 import com.example.newsfeed.repository.comment.CommentRepository;
-import com.example.newsfeed.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +39,6 @@ public class BoardService {
     private final BoardLikesRepository boardLikesRepository;
     private final CommentRepository commentRepository;
     private final CommentLikesRepository commentLikesRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public void save(BoardSaveRequestDto dto, Long id) {
@@ -59,7 +55,7 @@ public class BoardService {
     }
 
     public Page<BoardsResponseDto> findAll(
-            Long id, int page, int size,
+            int page, int size,
             OrderBy orderBy, Sort.Direction direction,
             LocalDate updateAtStart, LocalDate updateAtEnd) {
 
@@ -98,10 +94,10 @@ public class BoardService {
         ));
     }
 
-    public BoardResponseDto find(Long id, Long userId) {
+    public BoardResponseDto find(Long boardId) {
 
         // 피드 검색 후 검증
-        Board board = boardRepository.findById(id)
+        Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
 
         // 해당 피드 좋아요 여부
@@ -116,24 +112,19 @@ public class BoardService {
         List<Long> commentIds = pages.stream().map(Comment::getId).toList();
 
         // 댓글 좋아요 수 조회
-        List<CommentLikesDto> commentLikes = commentLikesRepository.countByCommentIds(id, commentIds);
+        List<CommentLikesDto> commentLikes = commentLikesRepository.countByCommentIds(commentIds);
         Map<Long, Long> commentLikesCountMap = commentLikes.stream()
                 .collect(Collectors.toMap(CommentLikesDto::getCommentId, CommentLikesDto::getCount));
 
-        // 댓글 좋아요 여부
-        Map<Long, Boolean> commentLikescheckMap = commentLikes.stream()
-                .collect(Collectors.toMap(CommentLikesDto::getCommentId, CommentLikesDto::isLike));
-
-        // 댓글 페이징
-        Page<CommentResponseDto> commentPages = pages.map(comment -> new CommentResponseDto(
+        // 댓글 리스트
+        List<CommentResponseDto> commentList = pages.map(comment -> new CommentResponseDto(
                 comment.getId(),
                 comment.getUser().getImgUrl(),
                 comment.getUser().getName(),
                 comment.getContents(),
                 commentLikesCountMap.getOrDefault(comment.getId(), 0L).intValue(),
-                commentLikescheckMap.getOrDefault(comment.getId(), false),
                 comment.getUpdatedAt()
-        ));
+        )).stream().toList();
 
         return new BoardResponseDto(
                 board.getUser().getName(),
@@ -141,7 +132,6 @@ public class BoardService {
                 board.getImage_url(),
                 board.getContents(),
                 board.getLikeCnt().intValue(),
-                commentPages,
                 isBoardLike,
                 board.getUpdatedAt().toLocalDate()
         );
@@ -207,11 +197,11 @@ public class BoardService {
         int follow = 1;
 
         // 개인 페이지 피드
-        Page<UserBoardFeedResponseDto> feeds = pages.map(board -> new UserBoardFeedResponseDto(
+        List<UserBoardFeedResponseDto> feeds = pages.map(board -> new UserBoardFeedResponseDto(
                 board.getImage_url(),
                 board.getLikeCnt().intValue(),
                 commentCountMap.getOrDefault(board.getId(), 0L).intValue()
-        ));
+        )).stream().toList();
 
 
         return pages.map(board -> new UserBoardResponseDto(
@@ -255,7 +245,7 @@ public class BoardService {
 
         // 피드 좋아요 목록
         Page<BoardLikes> likes = boardLikesRepository.findByBoardId(boardId, pageable);
-        
+
         return likes.map(like-> new LikeUsersDto(
                 like.getUser().getId(),
                 like.getUser().getName(),
