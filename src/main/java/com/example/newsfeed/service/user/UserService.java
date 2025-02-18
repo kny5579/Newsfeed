@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -106,6 +108,7 @@ public class UserService {
 
         // deleted 상태 변경
         user.setDeleted(true);
+        user.setDeletedAt(LocalDateTime.now());
 
         userRepository.save(user);
     }
