@@ -1,13 +1,13 @@
 package com.example.newsfeed.controller.boardController;
 
 import com.example.newsfeed.common.consts.OrderBy;
+import com.example.newsfeed.common.utill.JwtUtil;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
-import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
-import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
-import com.example.newsfeed.dto.boardDto.response.LikeUsersDto;
-import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
+import com.example.newsfeed.dto.boardDto.response.*;
 import com.example.newsfeed.service.board.BoardService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -23,13 +23,13 @@ import java.time.LocalDate;
 public class BoardController {
 
     private final BoardService boardService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping
-    public ResponseEntity<Void> save(
-            //@SessionAttribute(name = Const.LOGIN_USER) Long loginedId,
-            @ModelAttribute BoardSaveRequestDto dto
+    public ResponseEntity<Void> save(@RequestHeader("Authorization") String token, @ModelAttribute @Valid BoardSaveRequestDto dto
     ){
-        Long loginedId = 1L;
+
+        Long loginedId = jwtUtil.getValidatedUserId(token);
         boardService.save(dto, loginedId);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -37,8 +37,8 @@ public class BoardController {
 
     @GetMapping
     public ResponseEntity<Page<BoardsResponseDto>> findAll(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "1") @Min(1) int page,
+            @RequestParam(defaultValue = "10") @Min(1) int size,
             @RequestParam(defaultValue = "UPDATED_AT") OrderBy orderBy,
             @RequestParam(defaultValue = "DESC") Sort.Direction direction,
             @RequestParam(required = false) LocalDate updateAtStart,
@@ -51,18 +51,18 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardResponseDto> find(@PathVariable Long boardId){
+    public ResponseEntity<BoardResponseDto> find(@PathVariable @Min(1) Long boardId){
 
         return new ResponseEntity<>(boardService.find(boardId), HttpStatus.OK);
     }
 
     @PatchMapping("/{boardId}")
     public ResponseEntity<Void> update(
-//            @SessionAttribute(name = Const.LOGIN_USER) Long loginedId,
-            @PathVariable Long boardId,
-            @ModelAttribute UpdateBoardRequestDto dto){
+            @RequestHeader("Authorization") String token,
+            @PathVariable @Min(1) Long boardId,
+            @Valid @ModelAttribute UpdateBoardRequestDto dto){
 
-        Long loginedId = 1L;
+        Long loginedId = jwtUtil.getValidatedUserId(token);
         boardService.update(boardId, loginedId, dto);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -70,9 +70,10 @@ public class BoardController {
 
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> delete(
-//            @SessionAttribute(name = Const.LOGIN_USER) Long loginedId,
-            @PathVariable Long boardId){
-        Long loginedId = 1L;
+            @RequestHeader("Authorization") String token,
+            @PathVariable @Min(1) Long boardId){
+
+        Long loginedId = jwtUtil.getValidatedUserId(token);
         boardService.delete(boardId, loginedId);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -80,17 +81,19 @@ public class BoardController {
 
     @GetMapping("/board/{userId}")
     public ResponseEntity<Page<UserBoardFeedResponseDto>> findUserIdFeed(
-            @PathVariable Long userId,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size){
+            @PathVariable @Min(1) Long userId,
+            @RequestParam(defaultValue = "1") @Min(1) int page,
+            @RequestParam(defaultValue = "10") @Min(1) int size){
 
         return new ResponseEntity<>(boardService.findUserIdFeed(userId, page, size), HttpStatus.OK);
     }
 
     @PostMapping("/{boardId}/likes")
-    public ResponseEntity<Void> like(//@SessionAttribute(name = Const.LOGIN_USER) Long loginedId,
-                                     @PathVariable Long boardId){
-        Long loginedId = 1L;
+    public ResponseEntity<Void> like(
+            @RequestHeader("Authorization") String token,
+            @PathVariable @Min(1) Long boardId){
+
+        Long loginedId = jwtUtil.getValidatedUserId(token);
 
         boardService.likes(boardId, loginedId);
 
@@ -98,7 +101,7 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}/likes")
-    public ResponseEntity<Page<LikeUsersDto>> likeList(@PathVariable Long boardId){
+    public ResponseEntity<Page<LikeUsersDto>> likeList(@PathVariable @Min(1) Long boardId){
 
         return new ResponseEntity<>(boardService.likeList(boardId), HttpStatus.OK);
     }
