@@ -3,17 +3,21 @@ package com.example.newsfeed.service.comment;
 import com.example.newsfeed.dto.comment.requestDto.CommentRequestDto;
 import com.example.newsfeed.dto.comment.responseDto.CommentResponseDto;
 import com.example.newsfeed.entity.board.Board;
+import com.example.newsfeed.entity.comment.CommentLikes;
 import com.example.newsfeed.entity.comment.Comment;
 import com.example.newsfeed.entity.user.User;
 import com.example.newsfeed.repository.board.BoardRepository;
+import com.example.newsfeed.repository.comment.CommentLikesRepository;
 import com.example.newsfeed.repository.comment.CommentRepository;
 import com.example.newsfeed.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class CommentService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final CommentLikesRepository commentLikesRepository;
 
     @Transactional
     public CommentResponseDto createComment(Long userId, Long boardId, CommentRequestDto dto) {
@@ -79,5 +84,26 @@ public class CommentService {
             throw new RuntimeException("본인이 작성한 댓글만 삭제할 수 있습니다.");
         }
         commentRepository.delete(comment);
+    }
+
+    public void likes(Long commentId, Long userId) {
+
+        // 해당 댓글인지 조회
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+
+        // 사용자의 댓글인지 검증
+        if (!comment.getUser().getId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "It's your feed");
+        }
+
+        // 사용자가 해당 댓글에 좋아요를 눌렀는지 조회하고 누르지 않았았으면 좋아요 취소 처리
+        Optional<CommentLikes> commentLikes = commentLikesRepository.findByCommentIdAndUserId(commentId, userId);
+
+        if(commentLikes.isEmpty()){
+            commentLikesRepository.save((new CommentLikes(comment, comment.getUser())));
+        }else{
+            commentLikesRepository.delete(commentLikes.get());
+        }
     }
 }
