@@ -24,7 +24,7 @@ public class CommentLikes {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public CommentLikes(Comment comment, User user){
+    public CommentLikes(Comment comment, User user) {
         this.comment = comment;
         this.user = user;
     }

@@ -49,7 +49,7 @@ public class FollowService {
         User user = getUserById(userId);
 
         return followRepository.findByUserId(userId).stream()
-                .filter(follow->ACCEPTED.equals(follow.getStatus()))
+                .filter(follow -> ACCEPTED.equals(follow.getStatus()))
                 .map(f -> new FollowResponseDto(
                         f.getFollower().getId(),
                         f.getFollower().getName(),

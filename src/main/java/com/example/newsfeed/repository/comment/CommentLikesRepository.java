@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CommentLikesRepository extends JpaRepository <CommentLikes, Long> {
+public interface CommentLikesRepository extends JpaRepository<CommentLikes, Long> {
 
     @Query("select new com.example.newsfeed.dto.comment.CommentLikesDto(c.comment.id, count(c), " +
             "CASE WHEN SUM(CASE WHEN c.user.id = :userId THEN 1 ELSE 0 END ) > 0 THEN true ELSE  false  END ) " +
