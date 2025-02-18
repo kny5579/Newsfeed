@@ -1,0 +1,17 @@
+package com.example.newsfeed.dto.boardDto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.time.LocalDate;
+
+@Getter
+@AllArgsConstructor
+public class CommentResponseDto {
+    private String img_url;
+    private String name;
+    private String contents;
+    private int likeCnt;
+    private boolean like;
+    private LocalDate updatedAt;
+}
