@@ -1,15 +1,13 @@
 package com.example.newsfeed.service.board;
 
 import com.example.newsfeed.common.consts.OrderBy;
+import com.example.newsfeed.dto.boardDto.response.*;
 import com.example.newsfeed.dto.comment.CommentLikesDto;
 import com.example.newsfeed.dto.comment.CommentCountDto;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
-import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
-import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
-import com.example.newsfeed.dto.boardDto.response.UserBoardFeedResponseDto;
-import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
 import com.example.newsfeed.dto.comment.responseDto.CommentResponseDto;
+import com.example.newsfeed.dto.follow.responseDto.FollowResponseDto;
 import com.example.newsfeed.entity.board.BoardLikes;
 import com.example.newsfeed.entity.board.Board;
 import com.example.newsfeed.entity.comment.Comment;
@@ -18,6 +16,7 @@ import com.example.newsfeed.repository.board.BoardLikesRepository;
 import com.example.newsfeed.repository.comment.CommentLikesRepository;
 import com.example.newsfeed.repository.board.BoardRepository;
 import com.example.newsfeed.repository.comment.CommentRepository;
+import com.example.newsfeed.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +42,7 @@ public class BoardService {
     private final BoardLikesRepository boardLikesRepository;
     private final CommentRepository commentRepository;
     private final CommentLikesRepository commentLikesRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void save(BoardSaveRequestDto dto, Long id) {
@@ -245,5 +246,20 @@ public class BoardService {
             boardLikesRepository.delete(boardLike.get());
             board.cansle();
         }
+    }
+
+    public Page<LikeUsersDto> likeList(Long boardId) {
+
+        // 페이징 기준
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // 피드 좋아요 목록
+        Page<BoardLikes> likes = boardLikesRepository.findByBoardId(boardId, pageable);
+        
+        return likes.map(like-> new LikeUsersDto(
+                like.getUser().getId(),
+                like.getUser().getName(),
+                like.getUser().getImgUrl()
+        ));
     }
 }
