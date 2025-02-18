@@ -20,6 +20,9 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private String contents;
 
+    @Column(name = "likes_cnt")
+    private Long likeCnt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;

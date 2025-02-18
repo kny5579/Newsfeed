@@ -44,7 +44,7 @@ public class CommentService {
                 user.getImgUrl(),
                 user.getName(),
                 comment.getContents(),
-                board.getLikeCnt(),
+                comment.getLikeCnt(),
                 comment.getCreatedAt()
         );
     }
@@ -58,7 +58,7 @@ public class CommentService {
                         c.getUser().getImgUrl(),
                         c.getUser().getName(),
                         c.getContents(),
-                        c.getBoard().getLikeCnt(),
+                        c.getLikeCnt(),
                         c.getUpdatedAt()
                 )).toList();
     }
