@@ -91,6 +91,7 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
+    @Transactional
     public void likes(Long commentId, Long userId) {
 
         // 해당 댓글인지 조회
