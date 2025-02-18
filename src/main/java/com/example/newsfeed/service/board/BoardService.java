@@ -129,7 +129,7 @@ public class BoardService {
                 comment.getUser().getImgUrl(),
                 comment.getUser().getName(),
                 comment.getContents(),
-                commentLikesCountMap.getOrDefault(comment.getId(), 0L).intValue(),
+                (long) commentLikesCountMap.getOrDefault(comment.getId(), 0L).intValue(),
                 comment.getUpdatedAt()
         ));
 
