@@ -1,7 +1,9 @@
 package com.example.newsfeed.common.exception;
 
-public class SamePasswordException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class SamePasswordException extends ApplicationException {
     public SamePasswordException(String message) {
-        super(message);
+        super(message, HttpStatus.NOT_FOUND);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.newsfeed.controller.user;
 
-import com.example.newsfeed.dto.user.req.ProfileUpdateRequestDto;
+import com.example.newsfeed.dto.user.req.UserProfileRequestDto;
 import com.example.newsfeed.dto.user.res.UserProfileResponseDto;
 import com.example.newsfeed.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class ProfileController {
 
     //프로필 수정
     @PatchMapping("/users/update")
-    public ResponseEntity<String> updateProfile(@PathVariable Long id, @RequestBody ProfileUpdateRequestDto dto) {
+    public ResponseEntity<String> updateProfile(@PathVariable Long id, @RequestBody UserProfileRequestDto dto) {
         userService.updateProfile(id, dto); //프로필 수정 로직을 서비스에서 처리
         return ResponseEntity.ok("프로필이 정상적으로 수정되었습니다.");
     }
