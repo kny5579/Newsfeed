@@ -4,7 +4,7 @@ import com.example.newsfeed.common.config.PasswordEncoder;
 import com.example.newsfeed.common.exception.InvalidCredentialException;
 import com.example.newsfeed.common.exception.InvalidPasswordFormatException;
 import com.example.newsfeed.common.exception.SamePasswordException;
-import com.example.newsfeed.common.exception.UserNotFoundException;
+import com.example.newsfeed.common.exception.NotFoundException;
 import com.example.newsfeed.common.utill.JwtUtil;
 import com.example.newsfeed.dto.user.req.*;
 import com.example.newsfeed.dto.user.res.SignInResponseDto;
@@ -82,7 +82,7 @@ public class UserService {
 
     public void update(Long userId, UpdateRequestDto dto) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("사용자를 찾을 수 없습니다.")
+                () -> new NotFoundException("사용자를 찾을 수 없습니다.")
         );
 
         // 기존 비밀번호 검증
@@ -98,7 +98,7 @@ public class UserService {
 
     public void delete(Long userId, DeleteRequestDto dto) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("사용자를 찾을 수 없습니다.")
+                () -> new NotFoundException("사용자를 찾을 수 없습니다.")
         );
 
         // 기존 비밀번호 검증
