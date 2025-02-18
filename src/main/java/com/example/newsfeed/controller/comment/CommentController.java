@@ -44,4 +44,14 @@ public class CommentController {
         commentService.deleteComment(userId, commentId);
         return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
     }
+
+    @PostMapping("/{commentId}/likes")
+    public ResponseEntity<Void> like(//@SessionAttribute(name = Const.LOGIN_USER) Long userId,
+                                     @PathVariable Long commentId){
+        Long userId = 1L;
+
+        commentService.likes(commentId, userId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

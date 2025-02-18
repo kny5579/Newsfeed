@@ -1,7 +1,7 @@
-package com.example.newsfeed.repository.board;
+package com.example.newsfeed.repository.comment;
 
-import com.example.newsfeed.dto.boardDto.CommentLikesDto;
-import com.example.newsfeed.entity.board.CommentLikes;
+import com.example.newsfeed.dto.comment.CommentLikesDto;
+import com.example.newsfeed.entity.comment.CommentLikes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
