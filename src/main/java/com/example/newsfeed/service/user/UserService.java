@@ -2,13 +2,13 @@ package com.example.newsfeed.service.user;
 
 import com.example.newsfeed.common.config.PasswordEncoder;
 import com.example.newsfeed.common.exception.InvalidCredentialException;
+import com.example.newsfeed.common.exception.InvalidPasswordFormatException;
+import com.example.newsfeed.common.exception.SamePasswordException;
 import com.example.newsfeed.common.exception.UserNotFoundException;
 import com.example.newsfeed.common.utill.JwtUtil;
-import com.example.newsfeed.dto.user.req.DeleteRequestDto;
-import com.example.newsfeed.dto.user.req.SignInRequestDto;
-import com.example.newsfeed.dto.user.req.SignUpRequestDto;
-import com.example.newsfeed.dto.user.req.UpdateRequestDto;
+import com.example.newsfeed.dto.user.req.*;
 import com.example.newsfeed.dto.user.res.SignInResponseDto;
+import com.example.newsfeed.dto.user.res.UserProfileResponseDto;
 import com.example.newsfeed.dto.user.res.UserResponseDto;
 import com.example.newsfeed.entity.user.User;
 import com.example.newsfeed.repository.user.UserRepository;
@@ -108,5 +108,66 @@ public class UserService {
         user.setDeleted(true);
 
         userRepository.save(user);
+    }
+
+    //프로필 관리
+    @Transactional
+    public void updateProfile(Long id, UserProfileRequestDto dto) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("사용자를 찾을 수 없습니다.")
+        );
+
+        // 비밀번호 변경 시, 기존 비밀번호 검증
+        if (dto.getOldPassword() != null) {
+            if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+                throw new InvalidCredentialException("현재 비밀번호가 일치하지 않습니다.");
+            }
+
+            // 새 비밀번호가 현재 비밀번호와 동일한지 체크
+            if (dto.getNewPassword() != null && passwordEncoder.matches(dto.getOldPassword(), dto.getNewPassword())) {
+                throw new SamePasswordException("새 비밀번호는 현재 비밀번호와 동일할 수 없습니다.");
+            }
+
+            // 비밀번호 형식 검증 (예시: 최소 8자, 대소문자, 숫자, 특수문자 포함)
+            if (!isValidPassword(dto.getNewPassword())) {
+                throw new InvalidPasswordFormatException("비밀번호는 최소 8자 이상, 대소문자, 숫자, 특수문자를 포함해야 합니다.");
+            }
+
+            // 비밀번호를 새 비밀번호로 변경
+            user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        }
+
+        // 이메일, 이름, 이미지 등의 다른 프로필 수정
+        if (dto.getName() != null) {
+            user.setName(dto.getName());
+        }
+        if (dto.getImgUrl() != null) {
+            user.setImgUrl(dto.getImgUrl());
+        }
+
+        // 변경된 정보 저장
+        userRepository.save(user);
+    }
+
+    // 비밀번호 형식 검증 메서드
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8
+                && password.matches(".*[A-Z].*") // 대문자
+                && password.matches(".*[a-z].*") // 소문자
+                && password.matches(".*\\d.*") // 숫자
+                && password.matches(".*[!@#$%^&*(),.?\":{}|<>].*"); // 특수문자
+    }
+
+    public UserProfileResponseDto getProfile(Long id) {
+        //사용자가 존재하는지 확인
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        //민감한 정보 제외한 프로필 반환(비밀번호 제외)
+        return new UserProfileResponseDto(
+                user.getId(),
+                user.getName(),
+                user.getImgUrl(),
+                user.getEmail()
+        );
     }
 }
