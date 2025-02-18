@@ -27,5 +27,6 @@ public class CommentLikes {
     public CommentLikes(Comment comment, User user) {
         this.comment = comment;
         this.user = user;
+        this.comment.like();
     }
 }

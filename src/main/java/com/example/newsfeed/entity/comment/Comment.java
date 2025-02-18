@@ -40,4 +40,12 @@ public class Comment extends BaseEntity {
     public void update(String contents) {
         this.contents = contents;
     }
+
+    public void like() {
+        this.likeCnt++;
+    }
+
+    public void cansle() {
+        this.likeCnt--;
+    }
 }

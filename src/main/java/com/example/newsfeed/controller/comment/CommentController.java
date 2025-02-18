@@ -58,12 +58,12 @@ public class CommentController {
     }
 
     @PostMapping("/{commentId}/likes")
-    public ResponseEntity<Void> like(/*@RequestHeader("Authorization") String token,*/Long userId,
+    public ResponseEntity<Void> like(/*@RequestHeader("Authorization") String token,*/
                                      @PathVariable Long commentId) {
         /*Long userId = jwtUtil.getValidatedUserId(token);
         if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();*/
 
-        userId = 1L;
+        Long userId = 1L;
         commentService.likes(commentId, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
