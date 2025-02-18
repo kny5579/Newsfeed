@@ -1,6 +1,5 @@
 package com.example.newsfeed.controller.follow;
 
-import com.example.newsfeed.common.consts.Const;
 import com.example.newsfeed.common.utill.JwtUtil;
 import com.example.newsfeed.dto.follow.responseDto.FollowResponseDto;
 import com.example.newsfeed.service.follow.FollowService;

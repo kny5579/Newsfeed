@@ -28,7 +28,7 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Board(String contents, String image_url, User user){
+    public Board(String contents, String image_url, User user) {
         this.contents = contents;
         this.image_url = image_url;
         this.user = user;
