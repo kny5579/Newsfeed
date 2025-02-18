@@ -11,7 +11,6 @@ import com.example.newsfeed.entity.user.User;
 import com.example.newsfeed.repository.board.BoardLikesRepository;
 import com.example.newsfeed.repository.board.BoardRepository;
 import com.example.newsfeed.repository.comment.CommentRepository;
-import com.example.newsfeed.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
