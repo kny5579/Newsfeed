@@ -2,10 +2,9 @@ package com.example.newsfeed.controller.comment;
 
 import com.example.newsfeed.dto.comment.requestDto.CommentRequestDto;
 import com.example.newsfeed.dto.comment.responseDto.CommentResponseDto;
-import com.example.newsfeed.repository.comment.CommentRepository;
 import com.example.newsfeed.service.comment.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +22,7 @@ public class CommentController {
     @PostMapping("/boards/{boardId}/comments")
     public ResponseEntity<CommentResponseDto> createComment(@SessionAttribute Long userId,
                                                             @PathVariable Long boardId,
-                                                            CommentRequestDto commentRequestDto) {
+                                                            @Valid CommentRequestDto commentRequestDto) {
         return new ResponseEntity<>(commentService.createComment(userId, boardId, commentRequestDto), HttpStatus.CREATED);
     }
 
@@ -35,8 +34,8 @@ public class CommentController {
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(@SessionAttribute Long userId,
                                                             @PathVariable Long commentId,
-                                                            CommentRequestDto commentRequestDto) {
-        return new ResponseEntity<>(commentService.updateComment(userId, commentId, commentRequestDto),HttpStatus.OK);
+                                                            @Valid CommentRequestDto commentRequestDto) {
+        return new ResponseEntity<>(commentService.updateComment(userId, commentId, commentRequestDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/comments/{commentId}")

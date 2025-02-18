@@ -18,7 +18,7 @@ public class CommentController {
 
     @PostMapping("/{commentId}/likes")
     public ResponseEntity<Void> like(//@SessionAttribute(name = Const.LOGIN_USER) Long userId,
-                                     @PathVariable Long commentId){
+                                     @PathVariable Long commentId) {
         Long userId = 1L;
 
         commentService.likes(commentId, userId);

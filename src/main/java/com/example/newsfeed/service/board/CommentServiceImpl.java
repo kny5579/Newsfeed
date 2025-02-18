@@ -40,3 +40,5 @@ public class CommentServiceImpl implements CommentService{
         }
     }
 }
+
+//dto like , 대정님이 하신 좋아요 기능을 comment 에 옮기고 좋아요 수 표시하는 거를 구현해야 함

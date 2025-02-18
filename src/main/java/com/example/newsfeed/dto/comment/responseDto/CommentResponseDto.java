@@ -3,7 +3,6 @@ package com.example.newsfeed.dto.comment.responseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
