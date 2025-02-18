@@ -5,6 +5,7 @@ import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
 import com.example.newsfeed.dto.boardDto.request.UpdateBoardRequestDto;
 import com.example.newsfeed.dto.boardDto.response.BoardResponseDto;
 import com.example.newsfeed.dto.boardDto.response.BoardsResponseDto;
+import com.example.newsfeed.dto.boardDto.response.LikeUsersDto;
 import com.example.newsfeed.dto.boardDto.response.UserBoardResponseDto;
 import com.example.newsfeed.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -101,5 +102,11 @@ public class BoardController {
         boardService.likes(boardId, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{boardId}/likes")
+    public ResponseEntity<Page<LikeUsersDto>> likeList(@PathVariable Long boardId){
+
+        return new ResponseEntity<>(boardService.likeList(boardId), HttpStatus.OK);
     }
 }
