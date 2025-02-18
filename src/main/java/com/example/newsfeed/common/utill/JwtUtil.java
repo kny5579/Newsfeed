@@ -27,6 +27,15 @@ public class JwtUtil {
         return (extractedUserId.equals(userId) && !isTokenExpired(token));
     }
 
+    public Long getValidatedUserId(String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        String token = authorizationHeader.substring(7);
+        if (isTokenExpired(token)) return null;
+        return extractUserId(token);
+    }
+
     public Long extractUserId(String token) {
         return Long.parseLong(extractAllClaims(token).getSubject());
     }
