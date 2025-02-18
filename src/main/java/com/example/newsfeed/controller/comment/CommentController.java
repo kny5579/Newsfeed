@@ -42,14 +42,15 @@ public class CommentController {
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(@RequestHeader("Authorization") String token,
                                                             @PathVariable Long commentId,
-                                                            @Valid CommentRequestDto commentRequestDto) {
+                                                            @Valid @RequestBody CommentRequestDto commentRequestDto) {
         Long userId = jwtUtil.getValidatedUserId(token);
         if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return new ResponseEntity<>(commentService.updateComment(userId, commentId, commentRequestDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<String> deleteComment(@RequestHeader("Authorization") String token, @PathVariable Long commentId) {
+    public ResponseEntity<String> deleteComment(@RequestHeader("Authorization") String token,
+                                                @PathVariable Long commentId) {
         Long userId = jwtUtil.getValidatedUserId(token);
         if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         commentService.deleteComment(userId, commentId);
