@@ -13,7 +13,6 @@ public class CommentResponseDto {
     private String img_url;
     private String name;
     private String contents;
-    private int likeCnt;
-    private boolean like;
+    private Long likeCnt;
     private LocalDateTime updatedAt;
 }

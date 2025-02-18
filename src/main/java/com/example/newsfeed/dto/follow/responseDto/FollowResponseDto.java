@@ -9,4 +9,5 @@ import lombok.Getter;
 public class FollowResponseDto {
     private Long followerId;
     private String followerName;
+    private String imgUrl;
 }
