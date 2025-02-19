@@ -106,7 +106,7 @@ public class CommentService {
         // 사용자가 해당 댓글에 좋아요를 눌렀는지 조회하고 누르지 않았았으면 좋아요 취소 처리
         Optional<CommentLikes> commentLikes = commentLikesRepository.findByCommentIdAndUserId(commentId, userId);
         if (commentLikes.isEmpty()) {
-            commentLikesRepository.save((new CommentLikes(comment, comment.getUser())));
+            commentLikesRepository.save((new CommentLikes(comment, User.fromUserId(userId))));
         } else {
             commentLikesRepository.delete(commentLikes.get());
             comment.cansle();

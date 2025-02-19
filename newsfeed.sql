@@ -4,7 +4,8 @@ CREATE TABLE user
     name VARCHAR(20) NOT NULL,
     image_url VARCHAR(1000),
     email VARCHAR(30) NOT NULL UNIQUE,
-    password VARCHAR(20) NOT NULL,
+    password VARCHAR(500) NOT NULL,
+    deleted BOOLEAN DEFAULT FALSE NOT NULL,
     created_at DATETIME,
     updated_at DATETIME,
     deleted_at DATETIME

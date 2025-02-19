@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -26,7 +27,9 @@ public class BoardController {
     private final JwtUtil jwtUtil;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestHeader("Authorization") String token, @ModelAttribute @Valid BoardSaveRequestDto dto
+    public ResponseEntity<Void> save(
+            @RequestHeader("Authorization") String token,
+            @ModelAttribute @Valid BoardSaveRequestDto dto
     ) {
 
         Long loginedId = jwtUtil.getValidatedUserId(token);

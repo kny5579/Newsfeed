@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @AllArgsConstructor
@@ -14,6 +15,5 @@ public class UpdateBoardRequestDto {
     private final String contents;
 
     @NotNull
-    @Size(max = 1000)
-    private final String image_url;
+    private final MultipartFile image;
 }

@@ -1,5 +1,6 @@
 package com.example.newsfeed.service.board;
 
+import com.example.newsfeed.common.aws.S3Service;
 import com.example.newsfeed.common.consts.OrderBy;
 import com.example.newsfeed.common.exception.ForbiddenException;
 import com.example.newsfeed.common.exception.NotFoundException;
@@ -22,8 +23,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -38,11 +41,12 @@ public class BoardService {
     private final BoardLikesRepository boardLikesRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
     @Transactional
     public void save(BoardSaveRequestDto dto, Long loginedId) {
 
-        Board board = new Board(dto.getContents(), dto.getImage_url(), User.fromUserId(loginedId));
+        Board board = new Board(dto.getContents(), saveImg(dto.getImage()), User.fromUserId(loginedId));
 
         // 피드 저장            저장이 실패할 경우 JPA에서 예외 발생
         Board savedBoard = boardRepository.save(board);
@@ -123,7 +127,7 @@ public class BoardService {
         Board board = checkFeed(boardId, loginedId);
 
         // 피드 수정
-        board.save(dto.getContents(), dto.getImage_url());
+        board.save(dto.getContents(), saveImg(dto.getImage()));
     }
 
     @Transactional
@@ -182,7 +186,7 @@ public class BoardService {
         Optional<BoardLikes> boardLike = boardLikesRepository.findByBoardIdAndUserId(boardId, loginedId);
 
         if (boardLike.isEmpty()) {
-            boardLikesRepository.save((new BoardLikes(board, board.getUser())));
+            boardLikesRepository.save((new BoardLikes(board, User.fromUserId(loginedId))));
         } else {
             boardLikesRepository.delete(boardLike.get());
             board.cansle();
@@ -217,5 +221,16 @@ public class BoardService {
             throw new ForbiddenException("본인이 작성한 피드가 아닙니다.");
         }
         return board;
+    }
+
+    // S3에 이미지 업로드
+    public String saveImg(MultipartFile img){
+        String imgUrl;
+        try {
+            imgUrl = s3Service.uploadImage(img); // S3에 이미지 업로드하고 URL 가져오기
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 업로드 중 오류가 발생했습니다.", e);
+        }
+        return imgUrl;
     }
 }
