@@ -22,7 +22,7 @@ public class Board extends BaseEntity {
     private String image_url;
 
     @Column(name = "likes_cnt")
-    private Long likeCnt;
+    private Long likeCnt = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

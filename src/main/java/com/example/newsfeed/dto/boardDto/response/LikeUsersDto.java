@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserBoardFeedResponseDto {
+public class LikeUsersDto {
 
-    private String imgUrl;
-    private int likeCnt;
-    private int commentCnt;
+    private Long userId;
+    private String userName;
+    private String userImgUrl;
 }
