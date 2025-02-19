@@ -1,5 +1,6 @@
 package com.example.newsfeed.service.user;
 
+import com.example.newsfeed.common.aws.S3Service;
 import com.example.newsfeed.common.config.PasswordEncoder;
 import com.example.newsfeed.common.exception.InvalidCredentialException;
 import com.example.newsfeed.common.exception.InvalidPasswordFormatException;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Service
@@ -24,6 +26,8 @@ import java.time.LocalDateTime;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final S3Service s3Service;
+
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -39,9 +43,19 @@ public class UserService {
                 throw new IllegalArgumentException("탈퇴한 회원은 재가입할 수 없습니다.");
             }
         }
+
+        // S3에 이미지 업로드
+        String imgUrl;
+        try {
+            imgUrl = s3Service.uploadImage(dto.getImg()); // S3에 이미지 업로드하고 URL 가져오기
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 업로드 중 오류가 발생했습니다.", e);
+        }
+
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
-        User user = new User(dto.getName(), dto.getImgUrl(), dto.getEmail(), encodedPassword);
+        User user = new User(dto.getName(), imgUrl, dto.getEmail(), encodedPassword); // imgUrl 설정
         userRepository.save(user);
+
         return new UserResponseDto(
                 user.getId(),
                 user.getName(),

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +20,15 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody SignUpRequestDto dto) {
+    public ResponseEntity<UserResponseDto> signup(
+            @RequestParam("name") String name,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam("img") MultipartFile img) {
+
+        SignUpRequestDto dto = new SignUpRequestDto(name, null, email, password, img);
+
+        // 사용자 저장
         return ResponseEntity.ok(userService.save(dto));
     }
 
