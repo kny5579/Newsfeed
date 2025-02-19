@@ -1,50 +1,75 @@
-## 👨‍🏫 프로젝트 소개
-18조 입니다.
 
-## 🔗 링크
-[![logo](https://github.com/user-attachments/assets/ba97c31c-9201-47b0-a4c7-57a0ed550e47)](https://github.com/kny5579/Newsfeed)
 
-## 💻 개발기간
-2025.02.17(월) ~ 2025.02.20(금)
-  * 아이디어 기획 🤔
-  * 개발 🧑‍💻
-  * 발표 🗣️
+<div align="center">
 
-## ✨ 개발자 소개
-<div align=center> 
-<table>
-  <tbody>
-    <tr>
-      <td align="center"><a href="https://github.com/wonchaebin"><img src="https://avatars.githubusercontent.com/u/192691209?v=4" width="100px;" alt=""/><br /><sub><b> 원채빈 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/kny5579"><img src="https://avatars.githubusercontent.com/u/95288763?v=4" width="100px;" alt=""/><br /><sub><b> 김나연 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/Doritos38"><img src="https://github.com/user-attachments/assets/e5e15b3d-33e6-4d16-a264-7510cdfb299d" width="100px;" alt=""/><br /><sub><b> 김대정 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/ChungwonJ"><img src="https://avatars.githubusercontent.com/u/131515799?v=4" width="100px;" alt=""/><br /><sub><b> 정청원 </b></sub></a><br /></td>
-    </tr>
-  </tbody>
-</table>
+<!-- logo -->
+
+# NewsFeed
+
+
+[<img src="https://img.shields.io/badge/프로젝트 기간-2025.02.10~2025.02.20-blue?style=flat&logo=&logoColor=white" />]()
+
+</div> 
+
+## 📝 소개
+백엔드 깃 레파지토리의 README.md를 빠르게 작성하기 위해 만든 템플릿입니다.
+
+
+
+## 🗂️ APIs
+작성한 API는 아래에서 확인할 수 있습니다.
+
+👉🏻 [API 바로보기](/backend/APIs.md)
+
+
+<br />
+
+## ⚙ 기술 스택
+### Back-end
+<div>
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Java.png?raw=true" width="80">
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringBoot.png?raw=true" width="80">
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringDataJPA.png?raw=true" width="80">
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" width="80">
 </div>
 
-## 📚 STACKS
-<div align=center> 
-  <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
+### Infra
+<div>
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/AWSEC2.png?raw=true" width="80">
 </div>
 
-## 📌 주요기능
-1. 사이트 회원가입, 로그인
-2. 소모임 생성 / 읽기 / 수정 / 삭제
-3. 소모임 카테고리 검색
-4. 소모임 가입하기 / 탈퇴하기
-5. 댓글 생성 / 읽기 / 수정 / 삭제
+### Tools
+<div>
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" width="80">
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Notion.png?raw=true" width="80">
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Postman.png?raw=true" width="80">
+</div>
+
+<br />
+
+## 🤔 기술적 이슈와 해결 과정
+- Stream 써야할까?
+    - [Stream API에 대하여](https://velog.io/@yewo2nn16/Java-Stream-API)
+
+
+<br />
+
+## 💁‍♂️ 프로젝트 팀원
+|                     Backend                     |                   Backend                    |                    Backend                     |                    Backend                     |
+|:-----------------------------------------------:|:--------------------------------------------:|:----------------------------------------------:|:----------------------------------------------:|
+| ![](https://github.com/wonchaebin.png?size=120) | ![](https://github.com/kny5579.png?size=120) | ![](https://github.com/Doritos38.png?size=120) | ![](https://github.com/ChungwonJ.png?size=120) |
+|       [원채빈](https://github.com/wonchaebin)    |     [김나연](https://github.com/kny5579)      |    [김대정](https://github.com/Doritos38)       |      [정청원](https://github.com/ChungwonJ)      |
+
 
 ## 💬 프로젝트 개발 후기
 * 팀장 원채빈
-> 
+>
 
 * 팀원 김나연
-> 
+>
 
 * 팀원 김대정
-> 
+>
 
 * 팀원 정청원
 > 
