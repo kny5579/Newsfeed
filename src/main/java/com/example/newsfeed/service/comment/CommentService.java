@@ -100,7 +100,7 @@ public class CommentService {
 
         // 사용자의 댓글인지 검증
         if (comment.getUser().getId().equals(userId)) {
-            throw new ForbiddenException("본인이 작성한 댓글만 삭제할 수 있습니다.");
+            throw new ForbiddenException("본인이 작성한 댓글은 좋아요할 수 없습니다.");
         }
 
         // 사용자가 해당 댓글에 좋아요를 눌렀는지 조회하고 누르지 않았았으면 좋아요 취소 처리

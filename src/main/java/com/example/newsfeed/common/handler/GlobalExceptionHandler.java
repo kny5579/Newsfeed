@@ -1,5 +1,6 @@
 package com.example.newsfeed.common.handler;
 
+import com.example.newsfeed.common.exception.ApplicationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,11 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<Map<String, Object>> handleApplicationException(ApplicationException ex) {
+        return getErrorResponse(ex.getStatus(), ex.getMessage());
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
