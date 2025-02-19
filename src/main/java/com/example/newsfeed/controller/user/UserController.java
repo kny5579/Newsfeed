@@ -39,9 +39,11 @@ public class UserController {
         return ResponseEntity.ok(userService.findOne(id));
     }
 
-    @PatchMapping("/update")
+    @PatchMapping("/{id}/update")
     public ResponseEntity<String> update(
-            @RequestBody UpdateRequestDto dto,
+            @RequestPart(required = false) String oldPassword,
+            @RequestPart(required = false) String newPassword,
+            @RequestPart(required = false) MultipartFile img,
             @RequestHeader("Authorization") String authorizationHeader
     ) {
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
@@ -56,7 +58,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("유효하지 않은 토큰입니다.");
         }
 
-        // 비밀번호 변경
+        // UpdateRequestDto 생성
+        UpdateRequestDto dto = new UpdateRequestDto(oldPassword, newPassword, img);
+
+        // 사용자 정보 업데이트
         userService.update(userId, dto);
 
         return ResponseEntity.ok("성공적으로 변경되었습니다.");

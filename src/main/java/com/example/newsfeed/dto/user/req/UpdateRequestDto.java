@@ -1,6 +1,7 @@
 package com.example.newsfeed.dto.user.req;
 
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -8,15 +9,11 @@ import java.time.LocalDateTime;
 public class UpdateRequestDto {
     private final String oldPassword;
     private final String newPassword;
-    private final String imgUrl;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime modifiedAt;
+    private final MultipartFile img;
 
-    public UpdateRequestDto(String oldPassword, String newPassword, String imgUrl, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public UpdateRequestDto(String oldPassword, String newPassword, MultipartFile img) {
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
-        this.imgUrl = imgUrl;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+        this.img = img;
     }
 }

@@ -12,7 +12,6 @@ public class SignUpRequestDto {
     @NotBlank
     @Size(max = 4, message = "이름은 4자 이하여야 합니다.")
     private final String name;
-
     private final String imgUrl; // 이미지 URL은 저장 후 S3에서 가져옴
 
     @NotBlank(message = "이메일이 잘못되었습니다.")
@@ -33,3 +32,4 @@ public class SignUpRequestDto {
         this.img = img;
     }
 }
+

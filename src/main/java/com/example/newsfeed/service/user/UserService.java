@@ -96,19 +96,34 @@ public class UserService {
                 () -> new NotFoundException("사용자를 찾을 수 없습니다.")
         );
 
-        // 기존 비밀번호 검증
-        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-            throw new InvalidCredentialException("현재 비밀번호가 일치하지 않습니다.");
+        // 비밀번호 업데이트 시 처리
+        if (dto.getOldPassword() != null && dto.getNewPassword() != null) {
+            // 기존 비밀번호 검증
+            if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+                throw new InvalidCredentialException("현재 비밀번호가 일치하지 않습니다.");
+            }
+
+            // 새 비밀번호가 기존 비밀번호와 동일한지 확인
+            if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+                throw new InvalidCredentialException("현재 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.");
+            }
+
+            // 비밀번호 업데이트
+            user.setPassword(passwordEncoder.encode(dto.getNewPassword())); // 비밀번호 암호화
         }
 
-        // 새 비밀번호가 기존 비밀번호와 동일한지 확인
-        if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
-            throw new InvalidCredentialException("현재 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.");
+        // 프로필 이미지 업데이트
+        if (dto.getImg() != null && !dto.getImg().isEmpty()) {
+            String imgUrl;
+            try {
+                imgUrl = s3Service.uploadImage(dto.getImg()); // S3에 이미지 업로드하고 URL 가져오기
+                user.setImgUrl(imgUrl); // S3에서 가져온 이미지 URL로 업데이트
+            } catch (IOException e) {
+                throw new RuntimeException("이미지 업로드 중 오류가 발생했습니다.", e);
+            }
         }
 
-        // 업데이트
-        user.setPassword(passwordEncoder.encode(dto.getNewPassword())); // 비밀번호 암호화
-        user.setImgUrl(dto.getImgUrl());
+        // 사용자 정보 저장
         userRepository.save(user);
     }
 
