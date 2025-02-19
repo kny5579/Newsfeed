@@ -57,12 +57,12 @@ public class CommentController {
         return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
     }
 
-    @PostMapping("/{commentId}/likes")
+    @PostMapping("/comments/{commentId}/likes")
     public ResponseEntity<Void> like(/*@RequestHeader("Authorization") String token,*/
                                      @PathVariable Long commentId) {
         /*Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();*/
-
+        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+*/
         Long userId = 1L;
         commentService.likes(commentId, userId);
 

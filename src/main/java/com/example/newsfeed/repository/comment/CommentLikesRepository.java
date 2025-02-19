@@ -1,7 +1,9 @@
 package com.example.newsfeed.repository.comment;
 
 import com.example.newsfeed.dto.comment.CommentLikesDto;
+import com.example.newsfeed.entity.comment.Comment;
 import com.example.newsfeed.entity.comment.CommentLikes;
+import com.example.newsfeed.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,5 @@ public interface CommentLikesRepository extends JpaRepository<CommentLikes, Long
             "where c.comment.id in :commentIds " +
             "group by c.comment.id")
     List<CommentLikesDto> countByCommentIds(Long userId, List<Long> commentIds);
-
     Optional<CommentLikes> findByCommentIdAndUserId(Long commentId, Long userId);
 }

@@ -39,7 +39,7 @@ CREATE TABLE comment
     contents VARCHAR(200) NOT NULL,
     created_at DATETIME,
     updated_at DATETIME,
-    likes_cnt BIGINT,
+    likes_cnt BIGINT default 0,
     user_id BIGINT,
     board_id BIGINT,
     foreign key (user_id) references user(id) ON DELETE CASCADE,
