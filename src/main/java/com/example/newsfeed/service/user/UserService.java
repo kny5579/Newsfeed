@@ -101,6 +101,11 @@ public class UserService {
             throw new InvalidCredentialException("현재 비밀번호가 일치하지 않습니다.");
         }
 
+        // 새 비밀번호가 기존 비밀번호와 동일한지 확인
+        if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+            throw new InvalidCredentialException("현재 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.");
+        }
+
         // 업데이트
         user.setPassword(passwordEncoder.encode(dto.getNewPassword())); // 비밀번호 암호화
         user.setImgUrl(dto.getImgUrl());
