@@ -24,14 +24,12 @@ public class FollowController {
     public ResponseEntity<String> followUser(@RequestHeader("Authorization") String token,
                                              @PathVariable Long followerId) {
         Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return new ResponseEntity<>(followService.followUser(userId, followerId), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<FollowResponseDto>> getFollowers(@RequestHeader("Authorization") String token) {
         Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return new ResponseEntity<>(followService.getFollowers(userId), HttpStatus.OK);
     }
 
@@ -39,7 +37,6 @@ public class FollowController {
     public ResponseEntity<String> acceptFollower(@RequestHeader("Authorization") String token,
                                                  @PathVariable Long followerId) {
         Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         followService.acceptFollower(userId, followerId);
         return new ResponseEntity<>("요청이 수락되었습니다.", HttpStatus.OK);
     }
@@ -48,7 +45,6 @@ public class FollowController {
     public ResponseEntity<String> rejectFollower(@RequestHeader("Authorization") String token,
                                                  @PathVariable Long followerId) {
         Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         followService.rejectFollower(userId, followerId);
         return new ResponseEntity<>("요청이 거절되었습니다.", HttpStatus.OK);
     }
@@ -57,7 +53,6 @@ public class FollowController {
     public ResponseEntity<String> unfollowUser(@RequestHeader("Authorization") String token,
                                                @PathVariable Long followerId) {
         Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         followService.unfollowUser(userId, followerId);
         return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
     }

@@ -15,7 +15,6 @@ public class BoardResponseDto {
     private String board_image_url;
     private String contents;
     private int likeCnt;
-    private Page<CommentResponseDto> comment;
     private boolean like;
     private LocalDate updatedAt;
 }

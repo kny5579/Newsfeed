@@ -21,7 +21,7 @@ public class Comment extends BaseEntity {
     private String contents;
 
     @Column(name = "likes_cnt")
-    private Long likeCnt;
+    private Long likeCnt = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
@@ -39,5 +39,13 @@ public class Comment extends BaseEntity {
 
     public void update(String contents) {
         this.contents = contents;
+    }
+
+    public void like() {
+        this.likeCnt++;
+    }
+
+    public void cansle() {
+        this.likeCnt--;
     }
 }

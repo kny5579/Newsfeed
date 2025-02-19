@@ -1,5 +1,6 @@
 package com.example.newsfeed.common.utill;
 
+import com.example.newsfeed.common.exception.ForbiddenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -31,8 +32,11 @@ public class JwtUtil {
             return null;
         }
         String token = authorizationHeader.substring(7);
-        if (isTokenExpired(token)) return null;
-        return extractUserId(token);
+        Long userId = extractUserId(token);
+        if (userId == null || isTokenExpired(token)){
+            throw new ForbiddenException("잘못된 토큰입니다?");
+        }
+        return userId;
     }
 
     public Long extractUserId(String token) {

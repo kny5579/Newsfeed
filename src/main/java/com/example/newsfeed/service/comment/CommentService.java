@@ -96,20 +96,20 @@ public class CommentService {
 
         // 해당 댓글인지 조회
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+                .orElseThrow(() -> new NotFoundException("해당 댓글이 존재하지 않습니다."));
 
         // 사용자의 댓글인지 검증
-        if (!comment.getUser().getId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "It's your feed");
+        if (comment.getUser().getId().equals(userId)) {
+            throw new ForbiddenException("본인이 작성한 댓글만 삭제할 수 있습니다.");
         }
 
         // 사용자가 해당 댓글에 좋아요를 눌렀는지 조회하고 누르지 않았았으면 좋아요 취소 처리
         Optional<CommentLikes> commentLikes = commentLikesRepository.findByCommentIdAndUserId(commentId, userId);
-
         if (commentLikes.isEmpty()) {
             commentLikesRepository.save((new CommentLikes(comment, comment.getUser())));
         } else {
             commentLikesRepository.delete(commentLikes.get());
+            comment.cansle();
         }
     }
 }

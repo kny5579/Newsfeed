@@ -59,8 +59,8 @@ public class FollowService {
 
     @Transactional
     public void acceptFollower(Long userId, Long followerId) {
-        User user = getUserById(userId);
-        User follower = getUserById(followerId);
+        User follower = getUserById(userId); //친구 요청을 보낸 사람
+        User user = getUserById(followerId); //친구 요청을 받은 사람
 
         Follow existingFollow = getFollow(user, follower);
 
@@ -72,8 +72,8 @@ public class FollowService {
 
     @Transactional
     public void rejectFollower(Long userId, Long followerId) {
-        User user = getUserById(userId);
-        User follower = getUserById(followerId);
+        User follower = getUserById(userId);
+        User user = getUserById(followerId);
 
         Follow existingFollow = getFollow(user, follower);
 

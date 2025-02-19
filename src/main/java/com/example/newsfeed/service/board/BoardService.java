@@ -47,8 +47,8 @@ public class BoardService {
     public void save(BoardSaveRequestDto dto, Long id) {
 
         Board board = new Board(dto.getContents(), dto.getImage_url(), User.fromUserId(id));
-
         // 피드 저장            저장이 실패할 경우 JPA에서 예외 발생
+
         Board savedBoard = boardRepository.save(board);
 
         // 저장 내용 검증
@@ -115,23 +115,10 @@ public class BoardService {
         List<Long> commentIds = pages.stream().map(Comment::getId).toList();
 
         // 댓글 좋아요 수 조회
-        List<CommentLikesDto> commentLikes = commentLikesRepository.countByCommentIds(id, commentIds);
+        List<CommentLikesDto> commentLikes = commentLikesRepository.countByCommentIds(commentIds);
         Map<Long, Long> commentLikesCountMap = commentLikes.stream()
                 .collect(Collectors.toMap(CommentLikesDto::getCommentId, CommentLikesDto::getCount));
 
-        // 댓글 좋아요 여부
-        Map<Long, Boolean> commentLikescheckMap = commentLikes.stream()
-                .collect(Collectors.toMap(CommentLikesDto::getCommentId, CommentLikesDto::isLike));
-
-        // 댓글 페이징
-        Page<CommentResponseDto> commentPages = pages.map(comment -> new CommentResponseDto(
-                comment.getId(),
-                comment.getUser().getImgUrl(),
-                comment.getUser().getName(),
-                comment.getContents(),
-                (long) commentLikesCountMap.getOrDefault(comment.getId(), 0L).intValue(),
-                comment.getUpdatedAt()
-        ));
 
         return new BoardResponseDto(
                 board.getUser().getName(),
@@ -139,7 +126,6 @@ public class BoardService {
                 board.getImage_url(),
                 board.getContents(),
                 board.getLikeCnt().intValue(),
-                commentPages,
                 isBoardLike,
                 board.getUpdatedAt().toLocalDate()
         );

@@ -8,5 +8,4 @@ import lombok.Getter;
 public class CommentLikesDto {
     private final Long commentId;
     private final Long count;
-    private final boolean like;
 }

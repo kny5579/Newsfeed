@@ -26,10 +26,7 @@ public class CommentController {
             @RequestHeader("Authorization") String token,
             @PathVariable Long boardId,
             @Valid @RequestBody CommentRequestDto commentRequestDto) {
-
         Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentService.createComment(userId, boardId, commentRequestDto));
     }
@@ -44,7 +41,6 @@ public class CommentController {
                                                             @PathVariable Long commentId,
                                                             @Valid @RequestBody CommentRequestDto commentRequestDto) {
         Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return new ResponseEntity<>(commentService.updateComment(userId, commentId, commentRequestDto), HttpStatus.OK);
     }
 
@@ -52,20 +48,15 @@ public class CommentController {
     public ResponseEntity<String> deleteComment(@RequestHeader("Authorization") String token,
                                                 @PathVariable Long commentId) {
         Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         commentService.deleteComment(userId, commentId);
         return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
     }
 
-    @PostMapping("/{commentId}/likes")
-    public ResponseEntity<Void> like(/*@RequestHeader("Authorization") String token,*/Long userId,
+    @PostMapping("/comments/{commentId}/likes")
+    public ResponseEntity<Void> like(@RequestHeader("Authorization") String token,
                                      @PathVariable Long commentId) {
-        /*Long userId = jwtUtil.getValidatedUserId(token);
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();*/
-
-        userId = 1L;
+        Long userId = jwtUtil.getValidatedUserId(token);
         commentService.likes(commentId, userId);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
