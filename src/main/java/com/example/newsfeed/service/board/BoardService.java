@@ -1,6 +1,8 @@
 package com.example.newsfeed.service.board;
 
 import com.example.newsfeed.common.consts.OrderBy;
+import com.example.newsfeed.common.exception.ForbiddenException;
+import com.example.newsfeed.common.exception.NotFoundException;
 import com.example.newsfeed.dto.boardDto.response.*;
 import com.example.newsfeed.dto.comment.CommentCountDto;
 import com.example.newsfeed.dto.boardDto.request.BoardSaveRequestDto;
@@ -202,11 +204,11 @@ public class BoardService {
 
         // 해당 피드 조회
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+                .orElseThrow(() -> new NotFoundException("해당 피드가 존재하지 않습니다."));
 
         // 사용자의 피드인지 검증
-        if (!board.getUser().getId().equals(loginedId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "It's your feed");
+        if (board.getUser().getId().equals(loginedId)) {
+            throw new ForbiddenException("본인이 작성한 피드가 아닙니다.");
         }
         return board;
     }

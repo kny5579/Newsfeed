@@ -1,4 +1,4 @@
-package com.example.newsfeed.controller.boardController;
+package com.example.newsfeed.controller.board;
 
 import com.example.newsfeed.common.consts.OrderBy;
 import com.example.newsfeed.common.utill.JwtUtil;
