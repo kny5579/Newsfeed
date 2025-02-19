@@ -169,8 +169,14 @@ public class BoardService {
     @Transactional
     public void likes(Long boardId, Long loginedId) {
 
-        // 해당 피드 확인 후 겁증
-        Board board = checkFeed(boardId, loginedId);
+        // 해당 피드 조회
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new NotFoundException("해당 피드가 존재하지 않습니다."));
+
+        // 사용자의 피드인지 검증
+        if (board.getUser().getId().equals(loginedId)) {
+            throw new ForbiddenException("본인이 작성한 피드는 좋아요를 누를 수 없습니다");
+        }
 
         // 사용자가 해당 피드에 좋아요를 눌렀는지 조회하고 누르지 않았았으면 좋아요 처리
         Optional<BoardLikes> boardLike = boardLikesRepository.findByBoardIdAndUserId(boardId, loginedId);
@@ -207,7 +213,7 @@ public class BoardService {
                 .orElseThrow(() -> new NotFoundException("해당 피드가 존재하지 않습니다."));
 
         // 사용자의 피드인지 검증
-        if (board.getUser().getId().equals(loginedId)) {
+        if (!board.getUser().getId().equals(loginedId)) {
             throw new ForbiddenException("본인이 작성한 피드가 아닙니다.");
         }
         return board;
