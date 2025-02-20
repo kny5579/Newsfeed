@@ -46,10 +46,72 @@
 </div>
 
 <br />
-
+ 
 ## 🤔 기술적 이슈와 해결 과정
-- ddd
-    - link
+
+<details>
+<summary><strong>댓글 좋아요 API 테스트 결과 400 Bad_Request</strong></summary>
+
+### 💥 문제
+댓글의 좋아요 API 테스트를 위해 댓글 작성 후, 댓글 작성자와 다른 사용자 토큰을 받아 좋아요 API 테스트를 실행한 결과, 콘솔 창에는 아무 에러도 없었지만 응답은 계속 `400 Bad Request`를 반환함.
+
+#### 응답 코드 예시
+```json
+{
+    "timestamp": "2025-02-19T11:45:54.129+00:00",
+    "status": 400,
+    "error": "Bad Request",
+    "path": "/5/likes"
+}
+```
+<br />
+
+### 💥 원인
+1. `comment` 엔티티에서 댓글의 좋아요 수를 저장하는 `likes_cnt` 필드가 `null`로 저장됨.
+    
+    **기존 코드:**
+    ```java
+    @Column(name = "likes_cnt")
+    private Long likeCnt;
+    ```
+   
+2. 본인 댓글에 좋아요를 누르면 에러가 발생하도록 구현하려 했으나, 잘못된 부정 연산자로 인해 오히려 남의 댓글에 좋아요를 하면 에러가 발생하는 문제 발생.
+    
+    **기존 코드:**
+    ```java
+    // 사용자의 댓글인지 검증
+    if (!comment.getUser().getId().equals(userId)) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "It's your feed");
+    }
+    ```
+<br />
+
+### 💡 해결
+1. `likes_cnt` 값을 `0`으로 초기화하여 `null` 문제 해결.
+    
+    **수정 코드:**
+    ```java
+    @Column(name = "likes_cnt")
+    private Long likeCnt = 0L;
+    ```
+
+2. 검증 로직에서 부정 연산자 제거하여 본인 댓글에만 좋아요를 할 수 없도록 수정.
+    
+    **수정 코드:**
+    ```java
+    // 사용자의 댓글인지 검증
+    if (comment.getUser().getId().equals(userId)) {
+        throw new ForbiddenException("본인이 작성한 댓글은 좋아요할 수 없습니다.");
+    }
+    ```
+</details>
+
+<br />
+
+<details>
+<summary><strong>api에 넣어야 할 데이터 결정</strong></summary>
+</details>
+
 
 
 <br />
