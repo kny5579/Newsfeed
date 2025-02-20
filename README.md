@@ -20,7 +20,7 @@
 작성한 API는 아래에서 확인할 수 있습니다.
 
 👉🏻 [API 바로보기](https://teamsparta.notion.site/18-19a2dc3ef51480caa081fd3986e05f14)
-
+👉🏻 [Postman API](https://documenter.getpostman.com/view/41698254/2sAYdZvZtY)
 
 <br />
 
